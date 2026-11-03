@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>🎄 Vianočné Zoznamy Darčekov 🎁</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { 
       box-sizing: border-box; 
@@ -357,12 +356,18 @@
 
   const SUPABASE_URL = 'https://quueswcvqoldttniacxm.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_-vAk4wPgVqeH-sfDdnX8Eg_33-bL3Gu';
-  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const headers = {
+    'apikey': SUPABASE_KEY,
+    'Authorization': `Bearer ${SUPABASE_KEY}`,
+    'Content-Type': 'application/json',
+    'Prefer': 'return=representation'
+  };
 
   let currentUser = null;
   let activeTargetUser = null;
 
-  async function login() {
+  function login() {
     const enteredId = document.getElementById('user-id-input').value.trim();
     const foundUser = users.find(u => u.id === enteredId);
 
@@ -420,36 +425,50 @@
       link = 'https://' + link;
     }
 
-    const { error } = await supabase.from('gifts').insert([
-      {
-        id: Date.now().toString(),
-        owner: currentUser.name,
-        title: title,
-        link: link,
-        reserved_by: ""
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/gifts`, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({
+          id: Date.now().toString(),
+          owner: currentUser.name,
+          title: title,
+          link: link,
+          reserved_by: ""
+        })
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        alert("Chyba pri ukladaní: " + (err.message || res.statusText));
+        return;
       }
-    ]);
 
-    if (error) {
-      alert("Chyba pri ukladaní: " + error.message);
-      return;
+      inputTitle.value = '';
+      inputLink.value = '';
+      
+      activeTargetUser = currentUser.name;
+      renderMembersGrid();
+      renderGifts();
+    } catch (e) {
+      alert("Chyba pripojenia k databáze.");
     }
-
-    inputTitle.value = '';
-    inputLink.value = '';
-    
-    activeTargetUser = currentUser.name;
-    renderMembersGrid();
-    renderGifts();
   }
 
   async function deleteGift(giftId) {
     if (!confirm("Naozaj chceš vymazať toto prianie?")) return;
     
-    const { error } = await supabase.from('gifts').delete().eq('id', giftId);
-    if (error) alert("Chyba pri mazaní!");
-    
-    renderGifts();
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/gifts?id=eq.${giftId}`, {
+        method: 'DELETE',
+        headers: headers
+      });
+
+      if (!res.ok) alert("Chyba pri mazaní!");
+      renderGifts();
+    } catch (e) {
+      alert("Chyba pripojenia.");
+    }
   }
 
   async function reserveGift(giftId, currentReservedBy) {
@@ -464,14 +483,18 @@
       return;
     }
 
-    const { error } = await supabase
-      .from('gifts')
-      .update({ reserved_by: newReservedBy })
-      .eq('id', giftId);
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/gifts?id=eq.${giftId}`, {
+        method: 'PATCH',
+        headers: headers,
+        body: JSON.stringify({ reserved_by: newReservedBy })
+      });
 
-    if (error) alert("Chyba pri rezervácii!");
-
-    renderGifts();
+      if (!res.ok) alert("Chyba pri rezervácii!");
+      renderGifts();
+    } catch (e) {
+      alert("Chyba pripojenia.");
+    }
   }
 
   async function renderGifts() {
@@ -479,58 +502,63 @@
     document.getElementById('selected-list-title').innerText = `Zoznam darčekov: ${activeTargetUser}`;
     listDiv.innerHTML = '<p style="text-align:center; color: #94a3b8; padding: 20px 0;">Načítavam...</p>';
 
-    const { data: targetGifts, error } = await supabase
-      .from('gifts')
-      .select('*')
-      .eq('owner', activeTargetUser);
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/gifts?owner=eq.${encodeURIComponent(activeTargetUser)}&select=*`, {
+        method: 'GET',
+        headers: headers
+      });
 
-    listDiv.innerHTML = '';
-
-    if (error) {
-      listDiv.innerHTML = '<p style="text-align:center; color: #ef4444; padding: 20px 0;">Chyba pri načítaní darčekov.</p>';
-      return;
-    }
-
-    const isMyOwnList = (currentUser.name === activeTargetUser);
-
-    if (!targetGifts || targetGifts.length === 0) {
-      listDiv.innerHTML = '<p style="text-align:center; color: #94a3b8; padding: 30px 0; font-size: 16px; font-weight: 500;">Zatiaľ tu nie sú žiadne vianočné priania 🎄.</p>';
-      return;
-    }
-
-    targetGifts.forEach(gift => {
-      const item = document.createElement('div');
-      item.className = 'gift-item';
-
-      let linkHtml = gift.link ? `<a href="${gift.link}" target="_blank" class="gift-link">🔗 Kde kúpiť darček</a>` : '';
-      let rightContent = '';
-
-      if (isMyOwnList) {
-        rightContent = `
-          <div class="gift-actions">
-            <span class="status-badge">Tvoje prianie</span>
-            <button class="btn-delete" onclick="deleteGift('${gift.id}')">🗑️ Vymazať</button>
-          </div>
-        `;
-      } else {
-        if (gift.reserved_by === currentUser.name) {
-          rightContent = `<button class="btn-cancel" onclick="reserveGift('${gift.id}', '${gift.reserved_by}')">Zrušiť rezerváciu</button>`;
-        } else if (gift.reserved_by) {
-          rightContent = `<span class="status-badge">❌ Už rezervované</span>`;
-        } else {
-          rightContent = `<button class="btn-reserve" onclick="reserveGift('${gift.id}', '${gift.reserved_by}')">🎁 Rezervovať</button>`;
-        }
+      if (!res.ok) {
+        listDiv.innerHTML = '<p style="text-align:center; color: #ef4444; padding: 20px 0;">Chyba pri načítaní darčekov.</p>';
+        return;
       }
 
-      item.innerHTML = `
-        <div class="gift-info">
-          <div class="gift-title">${gift.title}</div>
-          ${linkHtml}
-        </div>
-        <div>${rightContent}</div>
-      `;
-      listDiv.appendChild(item);
-    });
+      const targetGifts = await res.json();
+      listDiv.innerHTML = '';
+
+      const isMyOwnList = (currentUser.name === activeTargetUser);
+
+      if (!targetGifts || targetGifts.length === 0) {
+        listDiv.innerHTML = '<p style="text-align:center; color: #94a3b8; padding: 30px 0; font-size: 16px; font-weight: 500;">Zatiaľ tu nie sú žiadne vianočné priania 🎄.</p>';
+        return;
+      }
+
+      targetGifts.forEach(gift => {
+        const item = document.createElement('div');
+        item.className = 'gift-item';
+
+        let linkHtml = gift.link ? `<a href="${gift.link}" target="_blank" class="gift-link">🔗 Kde kúpiť darček</a>` : '';
+        let rightContent = '';
+
+        if (isMyOwnList) {
+          rightContent = `
+            <div class="gift-actions">
+              <span class="status-badge">Tvoje prianie</span>
+              <button class="btn-delete" onclick="deleteGift('${gift.id}')">🗑️ Vymazať</button>
+            </div>
+          `;
+        } else {
+          if (gift.reserved_by === currentUser.name) {
+            rightContent = `<button class="btn-cancel" onclick="reserveGift('${gift.id}', '${gift.reserved_by}')">Zrušiť rezerváciu</button>`;
+          } else if (gift.reserved_by) {
+            rightContent = `<span class="status-badge">❌ Už rezervované</span>`;
+          } else {
+            rightContent = `<button class="btn-reserve" onclick="reserveGift('${gift.id}', '${gift.reserved_by}')">🎁 Rezervovať</button>`;
+          }
+        }
+
+        item.innerHTML = `
+          <div class="gift-info">
+            <div class="gift-title">${gift.title}</div>
+            ${linkHtml}
+          </div>
+          <div>${rightContent}</div>
+        `;
+        listDiv.appendChild(item);
+      });
+    } catch (e) {
+      listDiv.innerHTML = '<p style="text-align:center; color: #ef4444; padding: 20px 0;">Chyba pripojenia k serveru.</p>';
+    }
   }
 </script>
 </body>
