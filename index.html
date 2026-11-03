@@ -91,7 +91,7 @@
 
   <!-- PRIHLÁSENIE -->
   <div id="login-section" class="login-box">
-    <p>Zadaj svoje rodinné ID:</p>
+    <p>Zadaj svoje rodinné ID (napr. <strong>001</strong> pre Leo):</p>
     <input type="text" id="user-id-input" placeholder="Zadaj ID..." autofocus>
     <br>
     <button onclick="login()">Vstúpiť do portálu ✨</button>
@@ -149,15 +149,17 @@
         headers: { 'X-Master-Key': API_KEY }
       });
       let json = await res.json();
+      // JSONBin vracia dáta zabalené v kľúči .record
       dbData = json.record || { gifts: [] };
+      if (!dbData.gifts) dbData.gifts = [];
     } catch (e) {
-      alert("Chyba pri načítavaní dát zo servera.");
+      console.error("Chyba pri načítavaní:", e);
     }
   }
 
   async function saveData() {
     try {
-      await fetch(API_URL, {
+      let res = await fetch(API_URL, {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json',
@@ -165,6 +167,9 @@
         },
         body: JSON.stringify(dbData)
       });
+      if (!res.ok) {
+        alert("Chyba pri zápise na server!");
+      }
     } catch (e) {
       alert("Chyba pri ukladaní dát.");
     }
@@ -196,7 +201,7 @@
     currentUser = null;
     activeTargetUser = null;
     document.getElementById('user-id-input').value = '';
-    document.getElementById('login-section').classList.remove('hidden');
+    document.getElementById('login-section').classList.add('hidden');
     document.getElementById('app-section').classList.add('hidden');
   }
 
