@@ -91,7 +91,7 @@
 
   <!-- PRIHLÁSENIE -->
   <div id="login-section" class="login-box">
-    <p>Zadaj svoje rodinné ID:</p>
+    <p>Zadaj svoje rodinné ID (napr. <strong>001</strong> pre Leo):</p>
     <input type="text" id="user-id-input" placeholder="Zadaj ID..." autofocus>
     <br>
     <button onclick="login()">Vstúpiť do portálu ✨</button>
@@ -135,39 +135,28 @@
     { id: "007", name: "Stelly" }
   ];
 
-  const NPOINT_URL = 'https://api.npoint.io/4cec5715d42c5631763f';
-
   let currentUser = null;
   let activeTargetUser = null;
   let dbData = { gifts: [] };
 
-  async function loadData() {
-    try {
-      let res = await fetch(NPOINT_URL);
-      let json = await res.json();
-      dbData = json || { gifts: [] };
-      if (!dbData.gifts) dbData.gifts = [];
-    } catch (e) {
-      console.error("Chyba pri načítavaní:", e);
-    }
-  }
-
-  async function saveData() {
-    try {
-      let res = await fetch(NPOINT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(dbData)
-      });
-      if (!res.ok) {
-        alert("Chyba pri zápise na server!");
+  function loadData() {
+    const saved = localStorage.getItem('christmas_gifts_data');
+    if (saved) {
+      try {
+        dbData = JSON.parse(saved);
+      } catch (e) {
+        dbData = { gifts: [] };
       }
-    } catch (e) {
-      alert("Chyba pri ukladaní dát.");
+    } else {
+      dbData = { gifts: [] };
     }
   }
 
-  async function login() {
+  function saveData() {
+    localStorage.setItem('christmas_gifts_data', JSON.stringify(dbData));
+  }
+
+  function login() {
     const enteredId = document.getElementById('user-id-input').value.trim();
     const foundUser = users.find(u => u.id === enteredId);
 
@@ -179,7 +168,7 @@
     currentUser = foundUser;
     activeTargetUser = foundUser.name;
 
-    await loadData();
+    loadData();
 
     document.getElementById('login-section').classList.add('hidden');
     document.getElementById('app-section').classList.remove('hidden');
@@ -214,7 +203,7 @@
     });
   }
 
-  async function addGift() {
+  function addGift() {
     const inputTitle = document.getElementById('new-gift-input');
     const inputLink = document.getElementById('new-gift-link');
     const title = inputTitle.value.trim();
@@ -226,7 +215,7 @@
       link = 'https://' + link;
     }
 
-    await loadData();
+    loadData();
     dbData.gifts.push({
       id: Date.now().toString(),
       owner: currentUser.name,
@@ -235,7 +224,7 @@
       reservedBy: ""
     });
 
-    await saveData();
+    saveData();
     inputTitle.value = '';
     inputLink.value = '';
     
@@ -244,8 +233,8 @@
     renderGifts();
   }
 
-  async function reserveGift(giftId) {
-    await loadData();
+  function reserveGift(giftId) {
+    loadData();
     const gift = dbData.gifts.find(g => g.id === giftId);
     
     if (gift) {
@@ -257,13 +246,13 @@
         alert("Tento darček už rezervoval niekto iný!");
         return;
       }
-      await saveData();
+      saveData();
       renderGifts();
     }
   }
 
-  async function renderGifts() {
-    await loadData();
+  function renderGifts() {
+    loadData();
     const listDiv = document.getElementById('gifts-list');
     document.getElementById('selected-list-title').innerText = `Zoznam darčekov: ${activeTargetUser}`;
     listDiv.innerHTML = '';
@@ -289,7 +278,7 @@
         if (gift.reservedBy === currentUser.name) {
           rightContent = `<button class="btn-cancel" onclick="reserveGift('${gift.id}')">Zrušiť rezerváciu</button>`;
         } else if (gift.reservedBy) {
-          rightContent = `<status-badge class="status-badge">❌ Už rezervované</status-badge>`;
+          rightContent = `<span class="status-badge">❌ Už rezervované</span>`;
         } else {
           rightContent = `<button class="btn-reserve" onclick="reserveGift('${gift.id}')">🎁 Rezervovať</button>`;
         }
