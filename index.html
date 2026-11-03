@@ -4,82 +4,298 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>🎄 Vianočné Zoznamy Darčekov 🎁</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+    * { 
+      box-sizing: border-box; 
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
     body { 
-      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); 
-      color: #1f2937; 
-      margin: 0; 
-      padding: 30px 15px; 
+      background: radial-gradient(circle at top right, #1e1b4b, #0f172a, #020617);
+      color: #0f172a; 
+      padding: 40px 20px; 
       min-height: 100vh;
       display: flex; 
       justify-content: center; 
       align-items: flex-start;
     }
+
     .container { 
       width: 100%; 
-      max-width: 750px; 
-      background: #ffffff; 
-      padding: 35px; 
-      border-radius: 24px; 
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); 
-      border-top: 8px solid #f43f5e;
+      max-width: 800px; 
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(20px);
+      padding: 40px; 
+      border-radius: 28px; 
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.2); 
+      border-top: 6px solid #e11d48;
     }
-    h1 { 
-      font-size: 32px; 
-      font-weight: 700; 
-      text-align: center; 
-      margin-bottom: 28px; 
-      color: #0f172a; 
-    }
-    
-    /* LOGIN */
-    .login-box { text-align: center; padding: 30px 10px; }
-    .login-box p { color: #4b5563; font-size: 17px; margin-bottom: 20px; }
-    .login-box input { width: 100%; max-width: 400px; padding: 16px 20px; border: 2px solid #cbd5e1; border-radius: 14px; font-size: 18px; margin-bottom: 16px; outline: none; transition: 0.2s; background: #f8fafc; text-align: center; letter-spacing: 2px; }
-    .login-box input:focus { border-color: #f43f5e; background: #fff; box-shadow: 0 0 0 4px rgba(244, 63, 94, 0.15); }
-    
-    .login-box button { width: 100%; max-width: 400px; background: #f43f5e; color: white; border: none; padding: 16px; border-radius: 14px; font-size: 18px; font-weight: 600; cursor: pointer; transition: 0.2s; box-shadow: 0 6px 16px rgba(244, 63, 94, 0.3); }
-    .login-box button:hover { background: #e11d48; }
 
-    /* USER HEADER */
-    .header { display: flex; justify-content: space-between; align-items: center; background: #fff1f2; border: 1px solid #ffe4e6; padding: 16px 20px; border-radius: 14px; margin-bottom: 25px; }
-    .header-text { font-size: 15px; color: #9f1239; font-weight: 500; }
-    .logout-btn { width: auto; background: #64748b; padding: 10px 18px; font-size: 14px; border-radius: 10px; color: white; border: none; cursor: pointer; transition: 0.2s; }
+    .main-title { 
+      font-size: 32px; 
+      font-weight: 800; 
+      text-align: center; 
+      margin-bottom: 32px; 
+      background: linear-gradient(135deg, #0f172a 0%, #e11d48 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.02em;
+    }
+    
+    /* LOGIN UI */
+    .login-box { text-align: center; padding: 40px 20px; }
+    .login-box p { color: #64748b; font-size: 18px; margin-bottom: 24px; font-weight: 500; }
+    
+    .input-field { 
+      width: 100%; 
+      padding: 18px 22px; 
+      border: 2px solid #e2e8f0; 
+      border-radius: 16px; 
+      font-size: 16px; 
+      outline: none; 
+      transition: all 0.2s ease; 
+      background: #f8fafc; 
+      color: #0f172a;
+      font-weight: 500;
+    }
+
+    .login-box .input-field {
+      max-width: 360px;
+      text-align: center;
+      font-size: 20px;
+      letter-spacing: 3px;
+      margin-bottom: 20px;
+    }
+
+    .input-field:focus { 
+      border-color: #e11d48; 
+      background: #ffffff; 
+      box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.12); 
+    }
+    
+    .btn-primary { 
+      width: 100%; 
+      background: linear-gradient(135deg, #e11d48 0%, #be123c 100%); 
+      color: #ffffff; 
+      border: none; 
+      padding: 18px; 
+      border-radius: 16px; 
+      font-size: 17px; 
+      font-weight: 700; 
+      cursor: pointer; 
+      transition: all 0.2s ease; 
+      box-shadow: 0 10px 20px -5px rgba(225, 29, 72, 0.4); 
+    }
+
+    .login-box .btn-primary { max-width: 360px; }
+
+    .btn-primary:hover { 
+      transform: translateY(-2px);
+      box-shadow: 0 14px 24px -5px rgba(225, 29, 72, 0.5); 
+    }
+
+    /* HEADER */
+    .header { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      background: #fff1f2; 
+      border: 1px solid #ffe4e6; 
+      padding: 18px 24px; 
+      border-radius: 20px; 
+      margin-bottom: 32px; 
+    }
+
+    .user-badge { 
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px; 
+      color: #9f1239; 
+      font-weight: 600; 
+    }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      background: #e11d48;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .logout-btn { 
+      width: auto; 
+      background: #64748b; 
+      padding: 10px 20px; 
+      font-size: 14px; 
+      border-radius: 12px; 
+      color: white; 
+      border: none; 
+      font-weight: 600;
+      cursor: pointer; 
+      transition: 0.2s; 
+    }
+
     .logout-btn:hover { background: #475569; }
 
-    /* GRID PRE ČLENOV */
-    .section-title { font-size: 15px; font-weight: 700; text-transform: uppercase; color: #475569; letter-spacing: 0.05em; margin-bottom: 14px; margin-top: 24px; }
-    .members-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; margin-bottom: 25px; }
-    .member-card { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 14px; padding: 16px 10px; text-align: center; font-weight: 600; font-size: 16px; cursor: pointer; transition: 0.2s; color: #334155; }
-    .member-card:hover { border-color: #f43f5e; background: #fff1f2; color: #f43f5e; transform: translateY(-2px); }
-    .member-card.active { background: #f43f5e; color: white; border-color: #f43f5e; box-shadow: 0 6px 16px rgba(244, 63, 94, 0.3); }
+    /* MEMBERS GRID */
+    .section-title { 
+      font-size: 13px; 
+      font-weight: 800; 
+      text-transform: uppercase; 
+      color: #94a3b8; 
+      letter-spacing: 0.08em; 
+      margin-bottom: 16px; 
+      margin-top: 28px; 
+    }
 
-    /* ZOZNAM DARČEKOV */
-    .gift-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 18px 20px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; gap: 15px; transition: 0.2s; }
-    .gift-item:hover { border-color: #cbd5e1; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-    .gift-info { display: flex; flex-direction: column; gap: 6px; word-break: break-word; flex-grow: 1; }
-    .gift-title { font-weight: 600; font-size: 17px; color: #0f172a; }
-    .gift-link { font-size: 14px; color: #2563eb; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; font-weight: 500; margin-top: 2px; }
+    .members-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); 
+      gap: 12px; 
+      margin-bottom: 32px; 
+    }
+
+    .member-card { 
+      background: #f8fafc; 
+      border: 2px solid #f1f5f9; 
+      border-radius: 16px; 
+      padding: 16px 12px; 
+      text-align: center; 
+      font-weight: 700; 
+      font-size: 15px; 
+      cursor: pointer; 
+      transition: all 0.2s ease; 
+      color: #475569; 
+    }
+
+    .member-card:hover { 
+      border-color: #fda4af; 
+      background: #fff1f2; 
+      color: #e11d48; 
+      transform: translateY(-2px); 
+    }
+
+    .member-card.active { 
+      background: linear-gradient(135deg, #e11d48 0%, #be123c 100%); 
+      color: white; 
+      border-color: #e11d48; 
+      box-shadow: 0 8px 16px -4px rgba(225, 29, 72, 0.4); 
+    }
+
+    /* GIFTS LIST */
+    .gift-item { 
+      background: #ffffff; 
+      border: 1px solid #e2e8f0; 
+      border-radius: 20px; 
+      padding: 20px 24px; 
+      margin-bottom: 16px; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      gap: 20px; 
+      transition: all 0.2s ease; 
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+    }
+
+    .gift-item:hover { 
+      border-color: #cbd5e1; 
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); 
+    }
+
+    .gift-info { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 6px; 
+      word-break: break-word; 
+      flex-grow: 1; 
+    }
+
+    .gift-title { 
+      font-weight: 700; 
+      font-size: 18px; 
+      color: #0f172a; 
+    }
+
+    .gift-link { 
+      font-size: 14px; 
+      color: #2563eb; 
+      text-decoration: none; 
+      display: inline-flex; 
+      align-items: center; 
+      gap: 6px; 
+      font-weight: 600; 
+      margin-top: 2px; 
+    }
+
     .gift-link:hover { text-decoration: underline; }
     
-    button { cursor: pointer; border: none; font-weight: 600; border-radius: 12px; transition: 0.2s; }
-    .btn-reserve { background: #10b981; color: white; font-size: 14px; padding: 10px 18px; white-space: nowrap; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); }
-    .btn-reserve:hover { background: #059669; }
-    
-    .btn-cancel { background: #f59e0b; color: white; font-size: 14px; padding: 10px 18px; white-space: nowrap; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2); }
-    .btn-cancel:hover { background: #d97706; }
-    
-    .status-badge { font-size: 13px; font-weight: 600; color: #64748b; background: #e2e8f0; padding: 8px 14px; border-radius: 10px; white-space: nowrap; }
+    .gift-actions { display: flex; gap: 10px; align-items: center; }
 
-    /* FORMULÁR DOLE */
-    .add-box { margin-top: 30px; padding-top: 25px; border-top: 2px dashed #e2e8f0; }
-    .add-form-grid { display: flex; flex-direction: column; gap: 14px; }
-    .add-form-grid input { width: 100%; padding: 14px 18px; border: 2px solid #cbd5e1; border-radius: 12px; font-size: 15px; outline: none; background: #f8fafc; transition: 0.2s; }
-    .add-form-grid input:focus { border-color: #f43f5e; background: #fff; box-shadow: 0 0 0 4px rgba(244, 63, 94, 0.1); }
-    .btn-add { background: #f43f5e; color: white; padding: 16px; font-size: 16px; width: 100%; box-shadow: 0 6px 16px rgba(244, 63, 94, 0.3); }
-    .btn-add:hover { background: #e11d48; }
+    button { cursor: pointer; border: none; font-weight: 700; border-radius: 14px; transition: 0.2s; }
+
+    .btn-reserve { 
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%); 
+      color: white; 
+      font-size: 14px; 
+      padding: 12px 20px; 
+      white-space: nowrap; 
+      box-shadow: 0 6px 16px -4px rgba(16, 185, 129, 0.4); 
+    }
+
+    .btn-reserve:hover { transform: translateY(-1px); background: #059669; }
+    
+    .btn-cancel { 
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); 
+      color: white; 
+      font-size: 14px; 
+      padding: 12px 20px; 
+      white-space: nowrap; 
+      box-shadow: 0 6px 16px -4px rgba(245, 158, 11, 0.4); 
+    }
+
+    .btn-cancel:hover { transform: translateY(-1px); background: #d97706; }
+
+    .btn-delete { 
+      background: #f1f5f9; 
+      color: #ef4444; 
+      font-size: 14px; 
+      padding: 12px 18px; 
+      white-space: nowrap; 
+    }
+
+    .btn-delete:hover { background: #fee2e2; color: #dc2626; }
+    
+    .status-badge { 
+      font-size: 13px; 
+      font-weight: 700; 
+      color: #64748b; 
+      background: #f1f5f9; 
+      padding: 10px 16px; 
+      border-radius: 12px; 
+      white-space: nowrap; 
+    }
+
+    /* FORM CONTAINER */
+    .add-box { 
+      margin-top: 36px; 
+      padding-top: 32px; 
+      border-top: 2px dashed #e2e8f0; 
+    }
+
+    .add-form-grid { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 14px; 
+    }
 
     .hidden { display: none !important; }
   </style>
@@ -87,25 +303,28 @@
 <body>
 
 <div class="container">
-  <h1>🎄 Vianočné Zoznamy Darčekov 🎁</h1>
+  <h1 class="main-title">🎄 Vianočné Zoznamy 🎁</h1>
 
   <!-- PRIHLÁSENIE -->
   <div id="login-section" class="login-box">
-    <p>Zadaj svoje rodinné ID (napr. <strong>001</strong> pre Leo):</p>
-    <input type="text" id="user-id-input" placeholder="Zadaj ID..." autofocus>
+    <p>Zadaj svoje rodinné ID na prihlásenie:</p>
+    <input type="text" id="user-id-input" class="input-field" placeholder="napr. 001" autofocus>
     <br>
-    <button onclick="login()">Vstúpiť do portálu ✨</button>
+    <button class="btn-primary" onclick="login()">Vstúpiť do portálu</button>
   </div>
 
   <!-- APLIKÁCIA -->
   <div id="app-section" class="hidden">
     <div class="header">
-      <div class="header-text">👤 Prihlásený/á ako: <strong id="current-user-name" style="color: #e11d48; font-size: 16px;"></strong></div>
+      <div class="user-badge">
+        <div class="user-avatar" id="user-avatar">?</div>
+        <div>Prihlásený/á ako: <strong id="current-user-name" style="color: #e11d48;"></strong></div>
+      </div>
       <button class="logout-btn" onclick="logout()">Odhlásiť</button>
     </div>
 
     <!-- ZOZNAM ČLENOV RODINY -->
-    <div class="section-title">🎁 Vyber čí zoznam chceš pozrieť:</div>
+    <div class="section-title">Vyber čí zoznam chceš pozrieť:</div>
     <div class="members-grid" id="members-grid"></div>
 
     <!-- ZOZNAM DARČEKOV ZVOLENÉHO ČLENA -->
@@ -116,9 +335,9 @@
     <div class="add-box">
       <div class="section-title">➕ Pridať darček do svojho zoznamu</div>
       <div class="add-form-grid">
-        <input type="text" id="new-gift-input" placeholder="Názov darčeka (napr. Kniha, Sveter...)">
-        <input type="text" id="new-gift-link" placeholder="Odkaz na obchod (nepovinné, napr. alza.sk/...)">
-        <button class="btn-add" onclick="addGift()">Pridať prianie pod stromček 🌲</button>
+        <input type="text" id="new-gift-input" class="input-field" placeholder="Názov darčeka (napr. Kniha, Sveter...)">
+        <input type="text" id="new-gift-link" class="input-field" placeholder="Odkaz na e-shop (nepovinné, napr. alza.sk/...)">
+        <button class="btn-primary" onclick="addGift()">Pridať prianie pod stromček 🌲</button>
       </div>
     </div>
   </div>
@@ -172,7 +391,8 @@
 
     document.getElementById('login-section').classList.add('hidden');
     document.getElementById('app-section').classList.remove('hidden');
-    document.getElementById('current-user-name').innerText = `${currentUser.name} (ID: ${currentUser.id})`;
+    document.getElementById('current-user-name').innerText = `${currentUser.name}`;
+    document.getElementById('user-avatar').innerText = currentUser.name.charAt(0);
 
     renderMembersGrid();
     renderGifts();
@@ -233,6 +453,14 @@
     renderGifts();
   }
 
+  function deleteGift(giftId) {
+    if (!confirm("Naozaj chceš vymazať toto prianie?")) return;
+    loadData();
+    dbData.gifts = dbData.gifts.filter(g => g.id !== giftId);
+    saveData();
+    renderGifts();
+  }
+
   function reserveGift(giftId) {
     loadData();
     const gift = dbData.gifts.find(g => g.id === giftId);
@@ -261,7 +489,7 @@
     const isMyOwnList = (currentUser.name === activeTargetUser);
 
     if (targetGifts.length === 0) {
-      listDiv.innerHTML = '<p style="text-align:center; color: #94a3b8; padding: 25px 0; font-size: 15px;">Zatiaľ tu nie sú žiadne vianočné priania 🎄.</p>';
+      listDiv.innerHTML = '<p style="text-align:center; color: #94a3b8; padding: 30px 0; font-size: 16px; font-weight: 500;">Zatiaľ tu nie sú žiadne vianočné priania 🎄.</p>';
       return;
     }
 
@@ -269,11 +497,16 @@
       const item = document.createElement('div');
       item.className = 'gift-item';
 
-      let linkHtml = gift.link ? `<br><a href="${gift.link}" target="_blank" class="gift-link">🔗 Kde kúpiť darček</a>` : '';
+      let linkHtml = gift.link ? `<a href="${gift.link}" target="_blank" class="gift-link">🔗 Kde kúpiť darček</a>` : '';
       let rightContent = '';
 
       if (isMyOwnList) {
-        rightContent = `<span class="status-badge">Tvoje prianie 🎁</span>`;
+        rightContent = `
+          <div class="gift-actions">
+            <span class="status-badge">Tvoje prianie</span>
+            <button class="btn-delete" onclick="deleteGift('${gift.id}')">🗑️ Vymazať</button>
+          </div>
+        `;
       } else {
         if (gift.reservedBy === currentUser.name) {
           rightContent = `<button class="btn-cancel" onclick="reserveGift('${gift.id}')">Zrušiť rezerváciu</button>`;
