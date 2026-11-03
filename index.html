@@ -91,7 +91,7 @@
 
   <!-- PRIHLÁSENIE -->
   <div id="login-section" class="login-box">
-    <p>Zadaj svoje rodinné ID (napr. <strong>001</strong> pre Leo):</p>
+    <p>Zadaj svoje rodinné ID:</p>
     <input type="text" id="user-id-input" placeholder="Zadaj ID..." autofocus>
     <br>
     <button onclick="login()">Vstúpiť do portálu ✨</button>
@@ -149,7 +149,6 @@
         headers: { 'X-Master-Key': API_KEY }
       });
       let json = await res.json();
-      // JSONBin vracia dáta zabalené v kľúči .record
       dbData = json.record || { gifts: [] };
       if (!dbData.gifts) dbData.gifts = [];
     } catch (e) {
@@ -165,6 +164,7 @@
           'Content-Type': 'application/json',
           'X-Master-Key': API_KEY 
         },
+        // JSONBin v3 vyžaduje dáta zabalené priamo v tele požiadavky
         body: JSON.stringify(dbData)
       });
       if (!res.ok) {
@@ -201,7 +201,7 @@
     currentUser = null;
     activeTargetUser = null;
     document.getElementById('user-id-input').value = '';
-    document.getElementById('login-section').classList.add('hidden');
+    document.getElementById('login-section').classList.remove('hidden');
     document.getElementById('app-section').classList.add('hidden');
   }
 
