@@ -135,9 +135,7 @@
     { id: "007", name: "Stelly" }
   ];
 
-  const BIN_ID = '6aea4284ffd516053a39b02';
-  const API_KEY = '$2a$10$5WMPDIIKe2uqI7ihSM5V0uf1msOQ9.ZJ093GWHRIhHGGoNUeekXx6';
-  const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+  const NPOINT_URL = 'https://api.npoint.io/4cec5715d42c5631763f';
 
   let currentUser = null;
   let activeTargetUser = null;
@@ -145,11 +143,9 @@
 
   async function loadData() {
     try {
-      let res = await fetch(API_URL, {
-        headers: { 'X-Master-Key': API_KEY }
-      });
+      let res = await fetch(NPOINT_URL);
       let json = await res.json();
-      dbData = json.record || { gifts: [] };
+      dbData = json || { gifts: [] };
       if (!dbData.gifts) dbData.gifts = [];
     } catch (e) {
       console.error("Chyba pri načítavaní:", e);
@@ -158,13 +154,9 @@
 
   async function saveData() {
     try {
-      let res = await fetch(API_URL, {
-        method: 'PUT',
-        headers: { 
-          'Content-Type': 'application/json',
-          'X-Master-Key': API_KEY 
-        },
-        // JSONBin v3 vyžaduje dáta zabalené priamo v tele požiadavky
+      let res = await fetch(NPOINT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dbData)
       });
       if (!res.ok) {
@@ -297,7 +289,7 @@
         if (gift.reservedBy === currentUser.name) {
           rightContent = `<button class="btn-cancel" onclick="reserveGift('${gift.id}')">Zrušiť rezerváciu</button>`;
         } else if (gift.reservedBy) {
-          rightContent = `<span class="status-badge">❌ Už rezervované</span>`;
+          rightContent = `<status-badge class="status-badge">❌ Už rezervované</status-badge>`;
         } else {
           rightContent = `<button class="btn-reserve" onclick="reserveGift('${gift.id}')">🎁 Rezervovať</button>`;
         }
