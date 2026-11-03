@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>🎄 Vianočné Zoznamy Darčekov 🎁</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { 
       box-sizing: border-box; 
@@ -354,28 +355,14 @@
     { id: "007", name: "Stelly" }
   ];
 
+  const SUPABASE_URL = 'https://quueswcvqoldttniacxm.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_-vAk4wPgVqeH-sfDdnX8Eg_33-bL3Gu';
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
   let currentUser = null;
   let activeTargetUser = null;
-  let dbData = { gifts: [] };
 
-  function loadData() {
-    const saved = localStorage.getItem('christmas_gifts_data');
-    if (saved) {
-      try {
-        dbData = JSON.parse(saved);
-      } catch (e) {
-        dbData = { gifts: [] };
-      }
-    } else {
-      dbData = { gifts: [] };
-    }
-  }
-
-  function saveData() {
-    localStorage.setItem('christmas_gifts_data', JSON.stringify(dbData));
-  }
-
-  function login() {
+  async function login() {
     const enteredId = document.getElementById('user-id-input').value.trim();
     const foundUser = users.find(u => u.id === enteredId);
 
@@ -386,8 +373,6 @@
 
     currentUser = foundUser;
     activeTargetUser = foundUser.name;
-
-    loadData();
 
     document.getElementById('login-section').classList.add('hidden');
     document.getElementById('app-section').classList.remove('hidden');
@@ -423,7 +408,7 @@
     });
   }
 
-  function addGift() {
+  async function addGift() {
     const inputTitle = document.getElementById('new-gift-input');
     const inputLink = document.getElementById('new-gift-link');
     const title = inputTitle.value.trim();
@@ -435,16 +420,21 @@
       link = 'https://' + link;
     }
 
-    loadData();
-    dbData.gifts.push({
-      id: Date.now().toString(),
-      owner: currentUser.name,
-      title: title,
-      link: link,
-      reservedBy: ""
-    });
+    const { error } = await supabase.from('gifts').insert([
+      {
+        id: Date.now().toString(),
+        owner: currentUser.name,
+        title: title,
+        link: link,
+        reserved_by: ""
+      }
+    ]);
 
-    saveData();
+    if (error) {
+      alert("Chyba pri ukladaní: " + error.message);
+      return;
+    }
+
     inputTitle.value = '';
     inputLink.value = '';
     
@@ -453,42 +443,57 @@
     renderGifts();
   }
 
-  function deleteGift(giftId) {
+  async function deleteGift(giftId) {
     if (!confirm("Naozaj chceš vymazať toto prianie?")) return;
-    loadData();
-    dbData.gifts = dbData.gifts.filter(g => g.id !== giftId);
-    saveData();
+    
+    const { error } = await supabase.from('gifts').delete().eq('id', giftId);
+    if (error) alert("Chyba pri mazaní!");
+    
     renderGifts();
   }
 
-  function reserveGift(giftId) {
-    loadData();
-    const gift = dbData.gifts.find(g => g.id === giftId);
-    
-    if (gift) {
-      if (!gift.reservedBy) {
-        gift.reservedBy = currentUser.name;
-      } else if (gift.reservedBy === currentUser.name) {
-        gift.reservedBy = "";
-      } else {
-        alert("Tento darček už rezervoval niekto iný!");
-        return;
-      }
-      saveData();
-      renderGifts();
+  async function reserveGift(giftId, currentReservedBy) {
+    let newReservedBy = "";
+
+    if (!currentReservedBy) {
+      newReservedBy = currentUser.name;
+    } else if (currentReservedBy === currentUser.name) {
+      newReservedBy = "";
+    } else {
+      alert("Tento darček už rezervoval niekto iný!");
+      return;
     }
+
+    const { error } = await supabase
+      .from('gifts')
+      .update({ reserved_by: newReservedBy })
+      .eq('id', giftId);
+
+    if (error) alert("Chyba pri rezervácii!");
+
+    renderGifts();
   }
 
-  function renderGifts() {
-    loadData();
+  async function renderGifts() {
     const listDiv = document.getElementById('gifts-list');
     document.getElementById('selected-list-title').innerText = `Zoznam darčekov: ${activeTargetUser}`;
+    listDiv.innerHTML = '<p style="text-align:center; color: #94a3b8; padding: 20px 0;">Načítavam...</p>';
+
+    const { data: targetGifts, error } = await supabase
+      .from('gifts')
+      .select('*')
+      .eq('owner', activeTargetUser);
+
     listDiv.innerHTML = '';
 
-    const targetGifts = dbData.gifts.filter(g => g.owner === activeTargetUser);
+    if (error) {
+      listDiv.innerHTML = '<p style="text-align:center; color: #ef4444; padding: 20px 0;">Chyba pri načítaní darčekov.</p>';
+      return;
+    }
+
     const isMyOwnList = (currentUser.name === activeTargetUser);
 
-    if (targetGifts.length === 0) {
+    if (!targetGifts || targetGifts.length === 0) {
       listDiv.innerHTML = '<p style="text-align:center; color: #94a3b8; padding: 30px 0; font-size: 16px; font-weight: 500;">Zatiaľ tu nie sú žiadne vianočné priania 🎄.</p>';
       return;
     }
@@ -508,12 +513,12 @@
           </div>
         `;
       } else {
-        if (gift.reservedBy === currentUser.name) {
-          rightContent = `<button class="btn-cancel" onclick="reserveGift('${gift.id}')">Zrušiť rezerváciu</button>`;
-        } else if (gift.reservedBy) {
+        if (gift.reserved_by === currentUser.name) {
+          rightContent = `<button class="btn-cancel" onclick="reserveGift('${gift.id}', '${gift.reserved_by}')">Zrušiť rezerváciu</button>`;
+        } else if (gift.reserved_by) {
           rightContent = `<span class="status-badge">❌ Už rezervované</span>`;
         } else {
-          rightContent = `<button class="btn-reserve" onclick="reserveGift('${gift.id}')">🎁 Rezervovať</button>`;
+          rightContent = `<button class="btn-reserve" onclick="reserveGift('${gift.id}', '${gift.reserved_by}')">🎁 Rezervovať</button>`;
         }
       }
 
