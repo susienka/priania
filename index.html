@@ -21,6 +21,24 @@
       display: flex; 
       justify-content: center; 
       align-items: flex-start;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* VLOČKY NA POZADÍ (WOW EFEKT) */
+    .snowflake {
+      position: fixed;
+      top: -10px;
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 1rem;
+      pointer-events: none;
+      z-index: 1;
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(105vh) rotate(360deg); opacity: 0.2; }
     }
 
     .container { 
@@ -32,21 +50,53 @@
       border-radius: 28px; 
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.2); 
       border-top: 6px solid #e11d48;
+      position: relative;
+      z-index: 2;
     }
 
     .main-title { 
       font-size: 32px; 
       font-weight: 800; 
       text-align: center; 
-      margin-bottom: 32px; 
+      margin-bottom: 16px; 
       background: linear-gradient(135deg, #0f172a 0%, #e11d48 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       letter-spacing: -0.02em;
     }
+
+    /* VIANOČNÝ COUNTDOWN */
+    .countdown-box {
+      background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
+      border: 1px solid #fecdd3;
+      border-radius: 20px;
+      padding: 14px 20px;
+      margin-bottom: 28px;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 4px 12px rgba(225, 29, 72, 0.05);
+    }
+
+    .countdown-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #be123c;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .countdown-timer {
+      font-size: 18px;
+      font-weight: 800;
+      color: #e11d48;
+      letter-spacing: 1px;
+    }
     
     /* LOGIN UI */
-    .login-box { text-align: center; padding: 40px 20px; }
+    .login-box { text-align: center; padding: 30px 20px; }
     .login-box p { color: #64748b; font-size: 18px; margin-bottom: 24px; font-weight: 500; }
     
     .input-field { 
@@ -106,7 +156,7 @@
       border: 1px solid #ffe4e6; 
       padding: 18px 24px; 
       border-radius: 20px; 
-      margin-bottom: 32px; 
+      margin-bottom: 28px; 
       gap: 12px;
     }
 
@@ -205,6 +255,11 @@
       cursor: pointer; 
       transition: all 0.2s ease; 
       color: #475569; 
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
     }
 
     .member-card:hover { 
@@ -219,6 +274,12 @@
       color: white; 
       border-color: #e11d48; 
       box-shadow: 0 8px 16px -4px rgba(225, 29, 72, 0.4); 
+    }
+
+    .member-gift-count {
+      font-size: 11px;
+      font-weight: 600;
+      opacity: 0.8;
     }
 
     /* GIFTS LIST */
@@ -329,70 +390,53 @@
 
     .hidden { display: none !important; }
 
-    /* MOBILNÁ OPTIMALIZÁCIA (Media Queries) */
     @media (max-width: 600px) {
-      body {
-        padding: 12px 8px;
-      }
-
-      .container {
-        padding: 20px 16px;
-        border-radius: 20px;
-      }
-
-      .main-title {
-        font-size: 26px;
-        margin-bottom: 24px;
-      }
-
-      .header {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 14px;
-        padding: 14px 16px;
-      }
-
-      .header-actions {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-
-      .santa-link-btn, .logout-btn {
-        width: 100%;
-        text-align: center;
-        padding: 12px;
-        justify-content: center;
-      }
-
-      .gift-item {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 14px;
-        padding: 16px;
-      }
-
-      .gift-actions {
-        justify-content: flex-end;
-      }
-
-      .btn-reserve, .btn-cancel, .btn-delete, .status-badge {
-        width: 100%;
-        text-align: center;
-        padding: 12px;
-      }
+      body { padding: 12px 8px; }
+      .container { padding: 20px 16px; border-radius: 20px; }
+      .main-title { font-size: 26px; margin-bottom: 14px; }
+      .countdown-box { flex-direction: column; gap: 4px; padding: 12px; }
+      .header { flex-direction: column; align-items: stretch; gap: 14px; padding: 14px 16px; }
+      .header-actions { display: flex; flex-direction: column; gap: 8px; }
+      .santa-link-btn, .logout-btn { width: 100%; text-align: center; padding: 12px; justify-content: center; }
+      .gift-item { flex-direction: column; align-items: stretch; gap: 14px; padding: 16px; }
+      .gift-actions { justify-content: flex-end; }
+      .btn-reserve, .btn-cancel, .btn-delete, .status-badge { width: 100%; text-align: center; padding: 12px; }
     }
   </style>
 </head>
 <body>
 
+<!-- GENERÁTOR SNEHOVÝCH VLOČIEK (WOW EFEKT) -->
+<script>
+  function createSnowflakes() {
+    const flakeCount = 18;
+    for (let i = 0; i < flakeCount; i++) {
+      const flake = document.createElement('div');
+      flake.className = 'snowflake';
+      flake.innerText = '❄';
+      flake.style.left = Math.random() * 100 + 'vw';
+      flake.style.animationDuration = (Math.random() * 5 + 5) + 's';
+      flake.style.animationDelay = (Math.random() * 5) + 's';
+      flake.style.fontSize = (Math.random() * 12 + 10) + 'px';
+      document.body.appendChild(flake);
+    }
+  }
+  window.addEventListener('DOMContentLoaded', createSnowflakes);
+</script>
+
 <div class="container">
   <h1 class="main-title">🎄 Vianočné Zoznamy 🎁</h1>
+
+  <!-- VIANOČNÝ COUNTDOWN -->
+  <div class="countdown-box">
+    <span class="countdown-title">⏳ Do Vianoc zostáva:</span>
+    <span class="countdown-timer" id="countdown-timer">Načítavam...</span>
+  </div>
 
   <!-- PRIHLÁSENIE -->
   <div id="login-section" class="login-box">
     <p>Zadaj svoje rodinné ID na prihlásenie:</p>
-    <input type="password" id="user-id-input" class="input-field" placeholder="••••" autofocus>
+    <input type="password" id="user-id-input" class="input-field" placeholder="••••" autofocus onkeydown="if(event.key==='Enter') login()">
     <br>
     <button class="btn-primary" onclick="login()">Vstúpiť do portálu</button>
   </div>
@@ -422,8 +466,8 @@
     <div class="add-box">
       <div class="section-title">➕ Pridať darček do svojho zoznamu</div>
       <div class="add-form-grid">
-        <input type="text" id="new-gift-input" class="input-field" placeholder="Názov darčeka (napr. Kniha, Sveter...)">
-        <input type="text" id="new-gift-link" class="input-field" placeholder="Odkaz na e-shop (nepovinné, napr. alza.sk/...)">
+        <input type="text" id="new-gift-input" class="input-field" placeholder="Názov darčeka (napr. Kniha, Sveter...)" onkeydown="if(event.key==='Enter') addGift()">
+        <input type="text" id="new-gift-link" class="input-field" placeholder="Odkaz na e-shop (nepovinné, napr. alza.sk/...)" onkeydown="if(event.key==='Enter') addGift()">
         <button class="btn-primary" onclick="addGift()">Pridať prianie pod stromček 🌲</button>
       </div>
     </div>
@@ -431,7 +475,6 @@
 </div>
 
 <script>
-  // Zmenené mená presne podľa požiadavky so zachovaním pôvodných IDčok
   const users = [
     { id: "L01O", name: "Leo" },
     { id: "E02A", name: "Eva" },
@@ -455,6 +498,52 @@
 
   let currentUser = null;
   let activeTargetUser = null;
+  let giftsCountsMap = {};
+
+  // ODPOČÍTAVANIE DO VIANOC (24. Decembra 18:00)
+  function updateCountdown() {
+    const now = new Date();
+    let currentYear = now.getFullYear();
+    let xmas = new Date(currentYear, 11, 24, 18, 0, 0);
+
+    if (now > xmas) {
+      xmas = new Date(currentYear + 1, 11, 24, 18, 0, 0);
+    }
+
+    const diff = xmas - now;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / 1000 / 60) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    document.getElementById('countdown-timer').innerText = 
+      `${days}d ${hours}h ${minutes}m ${seconds}s 🎄`;
+  }
+
+  setInterval(updateCountdown, 1000);
+  updateCountdown();
+
+  // KONTROLA ZAPAMÄTANÉHO PRIHLÁSENIA
+  window.addEventListener('DOMContentLoaded', () => {
+    const savedId = localStorage.getItem('santa_user_id');
+    if (savedId) {
+      const foundUser = users.find(u => u.id === savedId);
+      if (foundUser) {
+        autoLogin(foundUser);
+      }
+    }
+  });
+
+  function autoLogin(foundUser) {
+    currentUser = foundUser;
+    activeTargetUser = foundUser.name;
+    document.getElementById('login-section').classList.add('hidden');
+    document.getElementById('app-section').classList.remove('hidden');
+    document.getElementById('current-user-name').innerText = `${currentUser.name}`;
+    document.getElementById('user-avatar').innerText = currentUser.name.charAt(0);
+
+    fetchGiftsCounts();
+  }
 
   function login() {
     const enteredId = document.getElementById('user-id-input').value.trim();
@@ -465,19 +554,12 @@
       return;
     }
 
-    currentUser = foundUser;
-    activeTargetUser = foundUser.name;
-
-    document.getElementById('login-section').classList.add('hidden');
-    document.getElementById('app-section').classList.remove('hidden');
-    document.getElementById('current-user-name').innerText = `${currentUser.name}`;
-    document.getElementById('user-avatar').innerText = currentUser.name.charAt(0);
-
-    renderMembersGrid();
-    renderGifts();
+    localStorage.setItem('santa_user_id', foundUser.id);
+    autoLogin(foundUser);
   }
 
   function logout() {
+    localStorage.removeItem('santa_user_id');
     currentUser = null;
     activeTargetUser = null;
     document.getElementById('user-id-input').value = '';
@@ -485,6 +567,27 @@
     document.getElementById('app-section').classList.add('hidden');
   }
 
+  // NAČÍTANIE POČTU DARČEKOV PRE KAŽDÉHO ČLENA RODINY
+  async function fetchGiftsCounts() {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/gifts?select=owner`, {
+        method: 'GET',
+        headers: headers
+      });
+      if (res.ok) {
+        const allGifts = await res.json();
+        giftsCountsMap = {};
+        allGifts.forEach(g => {
+          giftsCountsMap[g.owner] = (giftsCountsMap[g.owner] || 0) + 1;
+        });
+      }
+    } catch(e){}
+
+    renderMembersGrid();
+    renderGifts();
+  }
+
+  // SKLOŇOVANIE PRIAŇ
   function renderMembersGrid() {
     const grid = document.getElementById('members-grid');
     grid.innerHTML = '';
@@ -492,7 +595,24 @@
     users.forEach(u => {
       const card = document.createElement('div');
       card.className = `member-card ${u.name === activeTargetUser ? 'active' : ''}`;
-      card.innerText = u.name === currentUser.name ? `${u.name} (Ja)` : u.name;
+      
+      const displayName = u.name === currentUser.name ? `${u.name} (Ja)` : u.name;
+      const count = giftsCountsMap[u.name] || 0;
+      
+      let countText = '';
+      if (count === 1) {
+        countText = '1 prianie';
+      } else if (count >= 2 && count <= 4) {
+        countText = `${count} priania`;
+      } else {
+        countText = `${count} prianí`;
+      }
+
+      card.innerHTML = `
+        <div>${displayName}</div>
+        <div class="member-gift-count">🎁 ${countText}</div>
+      `;
+
       card.onclick = () => {
         activeTargetUser = u.name;
         renderMembersGrid();
@@ -537,8 +657,7 @@
       inputLink.value = '';
       
       activeTargetUser = currentUser.name;
-      renderMembersGrid();
-      renderGifts();
+      fetchGiftsCounts();
     } catch (e) {
       alert("Chyba pripojenia k databáze.");
     }
@@ -554,7 +673,7 @@
       });
 
       if (!res.ok) alert("Chyba pri mazaní!");
-      renderGifts();
+      fetchGiftsCounts();
     } catch (e) {
       alert("Chyba pripojenia.");
     }
