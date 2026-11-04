@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎅 Rodinný Secret Santa 🎁</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { 
+      box-sizing: border-box; 
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body { 
+      background: radial-gradient(circle at top right, #064e3b, #022c22, #020617);
+      color: #0f172a; 
+      padding: 20px 12px; 
+      min-height: 100vh;
+      display: flex; 
+      justify-content: center; 
+      align-items: center;
+    }
+
+    .container { 
+      width: 100%; 
+      max-width: 480px; 
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(20px);
+      padding: 32px 20px; 
+      border-radius: 24px; 
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.2); 
+      border-top: 6px solid #10b981;
+      text-align: center;
+      position: relative;
+    }
+
+    .nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #047857;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 16px;
+      padding: 8px 14px;
+      background: #ecfdf5;
+      border-radius: 12px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-back:hover {
+      background: #d1fae5;
+    }
+
+    .main-title { 
+      font-size: 28px; 
+      font-weight: 800; 
+      margin-bottom: 20px; 
+      background: linear-gradient(135deg, #065f46 0%, #10b981 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.02em;
+    }
+
+    .login-box { text-align: center; padding: 10px 0; }
+    .login-box p { color: #64748b; font-size: 15px; margin-bottom: 20px; font-weight: 500; }
+
+    /* OZNAM O ZAMKNUTÍ PRED PRIHLÁSENÍM */
+    .locked-notice {
+      background: #f8fafc;
+      border: 2px dashed #cbd5e1;
+      border-radius: 20px;
+      padding: 20px 16px;
+      margin-bottom: 20px;
+    }
+
+    .locked-icon {
+      font-size: 40px;
+      margin-bottom: 8px;
+      animation: floatIcon 2s ease-in-out infinite;
+    }
+
+    @keyframes floatIcon {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .locked-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 6px;
+    }
+
+    .locked-desc {
+      font-size: 13px;
+      color: #64748b;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .input-field { 
+      width: 100%; 
+      padding: 16px; 
+      border: 2px solid #e2e8f0; 
+      border-radius: 16px; 
+      font-size: 18px; 
+      text-align: center;
+      letter-spacing: 4px;
+      outline: none; 
+      transition: all 0.2s ease; 
+      background: #f8fafc; 
+      color: #0f172a;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .input-field:focus { 
+      border-color: #10b981; 
+      background: #ffffff; 
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.12); 
+    }
+
+    .btn-primary { 
+      width: 100%; 
+      background: linear-gradient(135deg, #10b981 0%, #047857 100%); 
+      color: #ffffff; 
+      border: none; 
+      padding: 16px; 
+      border-radius: 16px; 
+      font-size: 16px; 
+      font-weight: 700; 
+      cursor: pointer; 
+      transition: all 0.2s ease; 
+      box-shadow: 0 8px 16px -4px rgba(16, 185, 129, 0.4); 
+    }
+
+    .btn-primary:disabled {
+      background: #cbd5e1 !important;
+      box-shadow: none !important;
+      cursor: not-allowed !important;
+      opacity: 0.8;
+    }
+
+    .user-greeting {
+      font-size: 20px;
+      font-weight: 800;
+      color: #065f46;
+      margin-bottom: 20px;
+    }
+
+    /* PLYNULÝ SLOT REEL CONTAINER */
+    .slot-viewport {
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 20px;
+      height: 64px;
+      margin: 20px 0;
+      overflow: hidden;
+      position: relative;
+      box-shadow: inset 0 4px 8px rgba(0,0,0,0.04);
+    }
+
+    .slot-viewport::before, .slot-viewport::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 16px;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .slot-viewport::before {
+      top: 0;
+      background: linear-gradient(to bottom, rgba(248, 250, 252, 0.9), transparent);
+    }
+
+    .slot-viewport::after {
+      bottom: 0;
+      background: linear-gradient(to top, rgba(248, 250, 252, 0.9), transparent);
+    }
+
+    .slot-strip {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      width: 100%;
+      top: 0;
+      left: 0;
+      will-change: transform;
+    }
+
+    .slot-item {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      font-weight: 800;
+      color: #047857;
+      letter-spacing: -0.01em;
+    }
+
+    .result-box {
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+      border: 2px dashed #34d399;
+      border-radius: 20px;
+      padding: 24px 16px;
+      margin: 20px 0;
+      box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.15);
+      animation: zoomIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes zoomIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .result-name {
+      font-size: 32px;
+      font-weight: 800;
+      color: #047857;
+      margin-top: 8px;
+      letter-spacing: -0.01em;
+    }
+
+    .loading-text {
+      color: #94a3b8;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 24px 0;
+    }
+
+    .footer-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .logout-link {
+      color: #64748b;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <a href="index.html" class="nav-back">🎄 Späť na Zoznamy Darčekov</a>
+
+  <h1 class="main-title">🎅 Secret Santa 🎁</h1>
+
+  <!-- PRIHLÁSENIE -->
+  <div id="login-section" class="login-box">
+    
+    <!-- OZNAM PRED PRIHLÁSENÍM AK JE STRÁNKA ZAMKNUTÁ -->
+    <div id="login-locked-notice" class="locked-notice hidden">
+      <div class="locked-icon">💤🎅</div>
+      <div class="locked-title">Santa ešte oddychuje</div>
+      <div class="locked-desc">
+        Žrebovanie sa odomkne čoskoro! Prihlásenie je nateraz pozastavené.
+      </div>
+    </div>
+
+    <p id="login-text">Zadaj svoje rodinné ID pre vstup:</p>
+    <input type="password" id="user-id-input" class="input-field" placeholder="••••" autofocus>
+    <br>
+    <button class="btn-primary" id="login-btn" onclick="login()">Vstúpiť do žrebovania</button>
+  </div>
+
+  <!-- APLIKÁCIA -->
+  <div id="app-section" class="hidden">
+    <div class="user-greeting">Ahoj, <span id="current-user-name"></span>! 👋</div>
+
+    <!-- NAČÍTAVANIE -->
+    <div id="loading-section" class="loading-text">
+      Overujem stav žrebovania... 🎲
+    </div>
+
+    <!-- ŽREBOVACIE OKNO -->
+    <div id="draw-section" class="hidden">
+      <p style="color: #64748b; margin-bottom: 16px; font-size: 14px; font-weight: 500;">
+        Zatiaľ si nikoho nevyžreboval/a. Klikni na tlačidlo nižšie:
+      </p>
+
+      <div class="slot-viewport">
+        <div class="slot-strip" id="slot-strip">
+          <div class="slot-item">🎲 ???</div>
+        </div>
+      </div>
+
+      <button class="btn-primary" id="draw-btn" onclick="drawSecretSanta()">✨ Vyžrebovať si Secret Santu</button>
+    </div>
+
+    <!-- VÝSLEDOK (AK UŽ MÁ VYŽREBOVANÉ) -->
+    <div id="result-section" class="hidden">
+      <div class="result-box">
+        <p style="color: #047857; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em;">Tvoj Secret Santa cieľ je:</p>
+        <div class="result-name" id="assigned-person-name">???</div>
+      </div>
+      <p style="color: #64748b; font-size: 13px; font-weight: 500;">🤫 Nikomu to nehovor! Je to vianočné tajomstvo.</p>
+    </div>
+
+    <div class="footer-actions">
+      <span class="logout-link" onclick="logout()">Odhlásiť sa</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  // 🔓 PREPÍNAČ ZAMKNUTIA: Zmeň true na false pre odomknutie!
+  const IS_LOCKED = true;
+
+  const santaUsers = [
+    { id: "L01O", name: "Leo" },
+    { id: "E02A", name: "Eva" },
+    { id: "A03R", name: "Alexander" },
+    { id: "E40K", name: "Erik" },
+    { id: "S05A", name: "Sofia" },
+    { id: "A06X", name: "Alex" },
+    { id: "S07Y", name: "Stelly" }
+  ];
+
+  const SUPABASE_URL = 'https://quueswcvqoldttniacxm.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_-vAk4wPgVqeH-sfDdnX8Eg_33-bL3Gu';
+
+  const headers = {
+    'apikey': SUPABASE_KEY,
+    'Authorization': `Bearer ${SUPABASE_KEY}`,
+    'Content-Type': 'application/json',
+    'Prefer': 'return=representation'
+  };
+
+  let currentUser = null;
+
+  // KONTROLA ZAMKNUTIA IHNEĎ PO NAČÍTANÍ STRÁNKY
+  window.addEventListener('DOMContentLoaded', () => {
+    if (IS_LOCKED) {
+      document.getElementById('login-locked-notice').classList.remove('hidden');
+      document.getElementById('login-text').classList.add('hidden');
+      document.getElementById('user-id-input').disabled = true;
+      
+      const loginBtn = document.getElementById('login-btn');
+      loginBtn.disabled = true;
+      loginBtn.innerText = '🔒 Žrebovanie zamknuté';
+    }
+  });
+
+  async function login() {
+    if (IS_LOCKED) return;
+
+    const enteredId = document.getElementById('user-id-input').value.trim();
+    const foundUser = santaUsers.find(u => u.id === enteredId);
+
+    if (!foundUser) {
+      alert("Nesprávne ID!");
+      return;
+    }
+
+    currentUser = foundUser;
+    document.getElementById('login-section').classList.add('hidden');
+    document.getElementById('app-section').classList.remove('hidden');
+    document.getElementById('current-user-name').innerText = currentUser.name;
+
+    const btn = document.getElementById('draw-btn');
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    
+    const strip = document.getElementById('slot-strip');
+    strip.style.transition = 'none';
+    strip.style.transform = 'translateY(0px)';
+    strip.innerHTML = '<div class="slot-item">🎲 ???</div>';
+
+    document.getElementById('loading-section').classList.remove('hidden');
+    document.getElementById('draw-section').classList.add('hidden');
+    document.getElementById('result-section').classList.add('hidden');
+
+    await checkExistingDraw();
+  }
+
+  function logout() {
+    currentUser = null;
+    document.getElementById('user-id-input').value = '';
+    document.getElementById('login-section').classList.remove('hidden');
+    document.getElementById('app-section').classList.add('hidden');
+  }
+
+  async function checkExistingDraw() {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/secret_santa?id=eq.${currentUser.id}&select=*`, {
+        method: 'GET',
+        headers: headers
+      });
+
+      const data = await res.json();
+      document.getElementById('loading-section').classList.add('hidden');
+
+      if (data && data.length > 0) {
+        showResult(data[0].assigned_to);
+      } else {
+        document.getElementById('draw-section').classList.remove('hidden');
+      }
+    } catch (e) {
+      document.getElementById('loading-section').classList.add('hidden');
+      alert("Chyba pripojenia k serveru.");
+    }
+  }
+
+  async function drawSecretSanta() {
+    const btn = document.getElementById('draw-btn');
+    btn.disabled = true;
+    btn.style.opacity = '0.6';
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/secret_santa?select=*`, {
+        method: 'GET',
+        headers: headers
+      });
+
+      const allDraws = await res.json();
+      const alreadyAssignedNames = allDraws.map(d => d.assigned_to);
+
+      const availableCandidates = santaUsers.filter(u => 
+        u.name !== currentUser.name && !alreadyAssignedNames.includes(u.name)
+      );
+
+      if (availableCandidates.length === 0) {
+        alert("Všetci členovia sú už vyžrebovaní!");
+        btn.disabled = false;
+        btn.style.opacity = '1';
+        return;
+      }
+
+      const randomIndex = Math.floor(Math.random() * availableCandidates.length);
+      const chosenPerson = availableCandidates[randomIndex].name;
+
+      const strip = document.getElementById('slot-strip');
+      strip.style.transition = 'none';
+      strip.style.transform = 'translateY(0px)';
+
+      let reelNames = [];
+      const allNames = santaUsers.map(u => u.name);
+      
+      for (let i = 0; i < 6; i++) {
+        reelNames = reelNames.concat(allNames.sort(() => 0.5 - Math.random()));
+      }
+      reelNames.push(chosenPerson);
+
+      strip.innerHTML = reelNames.map(name => `<div class="slot-item">${name}</div>`).join('');
+
+      const itemHeight = 64;
+      const totalY = (reelNames.length - 1) * itemHeight;
+
+      requestAnimationFrame(() => {
+        strip.style.transition = 'transform 3.8s cubic-bezier(0.15, 0.85, 0.35, 1)';
+        strip.style.transform = `translateY(-${totalY}px)`;
+      });
+
+      setTimeout(() => {
+        saveDraw(chosenPerson);
+      }, 4000);
+
+    } catch (e) {
+      alert("Chyba pri pripájaní.");
+      btn.disabled = false;
+      btn.style.opacity = '1';
+    }
+  }
+
+  async function saveDraw(chosenPerson) {
+    const saveRes = await fetch(`${SUPABASE_URL}/rest/v1/secret_santa`, {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify({
+        id: currentUser.id,
+        santa_name: currentUser.name,
+        assigned_to: chosenPerson
+      })
+    });
+
+    if (!saveRes.ok) {
+      alert("Chyba pri ukladaní žrebu!");
+      return;
+    }
+
+    showResult(chosenPerson);
+  }
+
+  function showResult(personName) {
+    document.getElementById('loading-section').classList.add('hidden');
+    document.getElementById('draw-section').classList.add('hidden');
+    document.getElementById('result-section').classList.remove('hidden');
+    document.getElementById('assigned-person-name').innerText = personName;
+  }
+</script>
+</body>
+</html>
