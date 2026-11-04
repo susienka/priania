@@ -158,6 +158,7 @@
       border-radius: 20px; 
       margin-bottom: 28px; 
       gap: 12px;
+      flex-wrap: wrap;
     }
 
     .user-badge { 
@@ -188,6 +189,41 @@
       display: flex;
       gap: 10px;
       align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .icon-btn {
+      background: #ffffff;
+      border: 1px solid #fecdd3;
+      padding: 10px 14px;
+      font-size: 14px;
+      border-radius: 12px;
+      color: #be123c;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+    }
+    .icon-btn:hover { background: #ffe4e6; transform: translateY(-1px); }
+
+    .bell-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #e11d48;
+      color: white;
+      font-size: 10px;
+      font-weight: 800;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #ffffff;
     }
 
     .santa-link-btn {
@@ -225,6 +261,79 @@
     }
 
     .logout-btn:hover { background: #475569; }
+
+    /* MODÁLNE OKNO */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(2, 6, 23, 0.7);
+      backdrop-filter: blur(6px);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-card {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 28px 24px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      border-top: 6px solid #e11d48;
+    }
+
+    .modal-card h3 {
+      font-size: 20px;
+      color: #0f172a;
+      margin-bottom: 12px;
+      font-weight: 800;
+    }
+
+    .modal-card p {
+      font-size: 14px;
+      color: #64748b;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .btn-secondary {
+      background: #f1f5f9;
+      color: #475569;
+      padding: 12px 20px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: 0.2s;
+    }
+    .btn-secondary:hover { background: #e2e8f0; }
+
+    .bell-list {
+      text-align: left;
+      max-height: 260px;
+      overflow-y: auto;
+      margin-bottom: 16px;
+    }
+
+    .bell-item {
+      padding: 10px 12px;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 13px;
+      color: #334155;
+    }
+    .bell-item:last-child { border-bottom: none; }
+    .bell-item strong { color: #e11d48; }
 
     /* MEMBERS GRID */
     .section-title { 
@@ -407,8 +516,8 @@
       .main-title { font-size: 26px; margin-bottom: 14px; }
       .countdown-box { flex-direction: column; gap: 4px; padding: 12px; }
       .header { flex-direction: column; align-items: stretch; gap: 14px; padding: 14px 16px; }
-      .header-actions { display: flex; flex-direction: column; gap: 8px; }
-      .santa-link-btn, .logout-btn { width: 100%; text-align: center; padding: 12px; justify-content: center; }
+      .header-actions { display: flex; flex-wrap: wrap; gap: 8px; width: 100%; }
+      .santa-link-btn, .logout-btn, .icon-btn { flex: 1; text-align: center; padding: 12px; justify-content: center; }
       .gift-item { flex-direction: column; align-items: stretch; gap: 14px; padding: 16px; }
       .gift-actions { justify-content: flex-end; }
       .btn-reserve, .btn-cancel, .btn-delete, .status-badge { width: 100%; text-align: center; padding: 12px; }
@@ -417,7 +526,8 @@
 </head>
 <body>
 
-<!-- GENERÁTOR SNEHOVÝCH VLOČIEK (WOW EFEKT) -->
+<audio id="bg-music" preload="auto"></audio>
+
 <script>
   function createSnowflakes() {
     const flakeCount = 18;
@@ -438,13 +548,11 @@
 <div class="container">
   <h1 class="main-title">🎄 Vianočné Zoznamy 🎁</h1>
 
-  <!-- VIANOČNÝ COUNTDOWN -->
   <div class="countdown-box">
     <span class="countdown-title">⏳ Do Vianoc zostáva:</span>
     <span class="countdown-timer" id="countdown-timer">Načítavam...</span>
   </div>
 
-  <!-- PRIHLÁSENIE -->
   <div id="login-section" class="login-box">
     <p>Zadaj svoje rodinné ID na prihlásenie:</p>
     <input type="password" id="user-id-input" class="input-field" placeholder="••••" autofocus onkeydown="if(event.key==='Enter') login()">
@@ -452,7 +560,6 @@
     <button class="btn-primary" onclick="login()">Vstúpiť do portálu</button>
   </div>
 
-  <!-- APLIKÁCIA -->
   <div id="app-section" class="hidden">
     <div class="header">
       <div class="user-badge">
@@ -460,20 +567,23 @@
         <div>Prihlásený/á ako: <strong id="current-user-name" style="color: #e11d48;"></strong></div>
       </div>
       <div class="header-actions">
+        <button class="icon-btn" id="music-btn" onclick="toggleMusic()">🎵 Prehrať</button>
+
+        <button class="icon-btn" id="bell-btn" onclick="openBellModal()">
+          🔔 <span id="bell-count" class="bell-badge hidden">0</span>
+        </button>
+
         <a href="santa.html" class="santa-link-btn">🎅 Secret Santa</a>
         <button class="logout-btn" onclick="logout()">Odhlásiť</button>
       </div>
     </div>
 
-    <!-- ZOZNAM ČLENOV RODINY -->
     <div class="section-title">Vyber čí zoznam chceš pozrieť:</div>
     <div class="members-grid" id="members-grid"></div>
 
-    <!-- ZOZNAM DARČEKOV ZVOLENÉHO ČLENA -->
     <div class="section-title" id="selected-list-title">Darčeky</div>
     <div id="gifts-list"></div>
 
-    <!-- FORMULÁR NA PRIDANIE VLASTNÉHO DARČEKA DOLE -->
     <div class="add-box">
       <div class="section-title">➕ Pridať darček do svojho zoznamu</div>
       <div class="add-form-grid">
@@ -485,8 +595,26 @@
   </div>
 </div>
 
+<div id="music-modal" class="modal-overlay hidden">
+  <div class="modal-card">
+    <h3>🎄 Vianočná nálada</h3>
+    <p>Chceš si pri prezeraní darčekov spustiť príjemnú vianočnú hudbu?</p>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="startMusicFromModal()">🎶 Áno, spustiť</button>
+      <button class="btn-secondary" onclick="closeMusicModal()">Nie, ďakujem</button>
+    </div>
+  </div>
+</div>
+
+<div id="bell-modal" class="modal-overlay hidden">
+  <div class="modal-card">
+    <h3>🔔 Vianočné novinky v rodine</h3>
+    <div class="bell-list" id="bell-list-content">Načítavam živé novinky...</div>
+    <button class="btn-secondary" onclick="closeBellModal()">Zavrieť</button>
+  </div>
+</div>
+
 <script>
-  // Zachované pôvodne zadané IDčka a mená
   const users = [
     { id: "L01O", name: "Leo" },
     { id: "E02A", name: "Eva" },
@@ -511,8 +639,66 @@
   let currentUser = null;
   let activeTargetUser = null;
   let giftsCountsMap = {};
+  let lastSeenGiftsCount = 0; // Pre správne nulovanie neprečítaných noviniek
 
-  // ODPOČÍTAVANIE DO VIANOC (24. Decembra 18:00)
+  /* LOGIKA PRE HUDBU */
+  let currentSongIndex = 1;
+  let isPlaying = false;
+  const audioPlayer = document.getElementById('bg-music');
+
+  function loadTrack(index) {
+    audioPlayer.src = `hudba${index}.mp3`;
+  }
+
+  audioPlayer.addEventListener('ended', () => {
+    currentSongIndex++;
+    loadTrack(currentSongIndex);
+    audioPlayer.play().catch(() => {
+      currentSongIndex = 1;
+      loadTrack(currentSongIndex);
+      audioPlayer.play();
+    });
+  });
+
+  audioPlayer.addEventListener('error', () => {
+    if (currentSongIndex > 1) {
+      currentSongIndex = 1;
+      loadTrack(currentSongIndex);
+      if (isPlaying) audioPlayer.play();
+    }
+  });
+
+  function toggleMusic() {
+    const btn = document.getElementById('music-btn');
+    if (isPlaying) {
+      audioPlayer.pause();
+      isPlaying = false;
+      btn.innerText = '🎵 Prehrať';
+    } else {
+      if (!audioPlayer.src) loadTrack(currentSongIndex);
+      audioPlayer.play().then(() => {
+        isPlaying = true;
+        btn.innerText = '⏸️ Pozastaviť';
+      }).catch(() => {
+        alert("Súbor s hudbou (hudba1.mp3) nebol nájdený na serveri.");
+      });
+    }
+  }
+
+  function askMusicModal() {
+    document.getElementById('music-modal').classList.remove('hidden');
+  }
+
+  function closeMusicModal() {
+    document.getElementById('music-modal').classList.add('hidden');
+  }
+
+  function startMusicFromModal() {
+    closeMusicModal();
+    toggleMusic();
+  }
+
+  /* COUNTDOWN */
   function updateCountdown() {
     const now = new Date();
     let currentYear = now.getFullYear();
@@ -535,24 +721,28 @@
   setInterval(updateCountdown, 1000);
   updateCountdown();
 
-  // KONTROLA ZAPAMÄTANÉHO PRIHLÁSENIA
   window.addEventListener('DOMContentLoaded', () => {
+    loadTrack(1);
     const savedId = localStorage.getItem('santa_user_id');
     if (savedId) {
       const foundUser = users.find(u => u.id === savedId);
       if (foundUser) {
-        autoLogin(foundUser);
+        autoLogin(foundUser, false);
       }
     }
   });
 
-  function autoLogin(foundUser) {
+  function autoLogin(foundUser, isFreshLogin = false) {
     currentUser = foundUser;
     activeTargetUser = foundUser.name;
     document.getElementById('login-section').classList.add('hidden');
     document.getElementById('app-section').classList.remove('hidden');
     document.getElementById('current-user-name').innerText = `${currentUser.name}`;
     document.getElementById('user-avatar').innerText = currentUser.name.charAt(0);
+
+    if (isFreshLogin) {
+      askMusicModal();
+    }
 
     fetchGiftsCounts();
   }
@@ -567,22 +757,22 @@
     }
 
     localStorage.setItem('santa_user_id', foundUser.id);
-    autoLogin(foundUser);
+    autoLogin(foundUser, true);
   }
 
   function logout() {
     localStorage.removeItem('santa_user_id');
     currentUser = null;
     activeTargetUser = null;
+    if (isPlaying) toggleMusic();
     document.getElementById('user-id-input').value = '';
     document.getElementById('login-section').classList.remove('hidden');
     document.getElementById('app-section').classList.add('hidden');
   }
 
-  // NAČÍTANIE POČTU DARČEKOV PRE KAŽDÉHO ČLENA RODINY
   async function fetchGiftsCounts() {
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/gifts?select=owner`, {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/gifts?select=*`, {
         method: 'GET',
         headers: headers
       });
@@ -592,6 +782,24 @@
         allGifts.forEach(g => {
           giftsCountsMap[g.owner] = (giftsCountsMap[g.owner] || 0) + 1;
         });
+
+        // Vypočítame novinky (s ochranou vlastného prekvapenia)
+        const visibleGifts = allGifts.filter(g => !(g.reserved_by && g.owner === currentUser.name));
+        
+        // Ak sa objavili nové darčeky/rezervácie odvtedy, čo človek otvoril zvonček, ukážeme odznak
+        if (lastSeenGiftsCount === 0) {
+          lastSeenGiftsCount = visibleGifts.length;
+        }
+
+        const unreadCount = visibleGifts.length - lastSeenGiftsCount;
+        const badge = document.getElementById('bell-count');
+        
+        if (unreadCount > 0) {
+          badge.innerText = unreadCount > 9 ? '9+' : unreadCount;
+          badge.classList.remove('hidden');
+        } else {
+          badge.classList.add('hidden');
+        }
       }
     } catch(e){}
 
@@ -599,7 +807,53 @@
     renderGifts();
   }
 
-  // SKLOŇOVANIE PRIAŇ
+  /* ZVONČEK: ŽIVÉ NAČÍTANIE PRI OTVORENÍ & NULOVANIE PO PREČÍTANÍ */
+  async function openBellModal() {
+    const listDiv = document.getElementById('bell-list-content');
+    listDiv.innerHTML = 'Načítavam najnovšie správy...';
+    document.getElementById('bell-modal').classList.remove('hidden');
+
+    try {
+      // Vždy 100% živé dáta priamo z databázy
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/gifts?select=*`, {
+        method: 'GET',
+        headers: headers
+      });
+      
+      const allGifts = await res.json();
+      
+      // Ochrana prekvapenia: skryjeme rezervácie používateľovho vlastného zoznamu
+      const filtered = allGifts.filter(g => !(g.reserved_by && g.owner === currentUser.name));
+      
+      // Po prečítaní okamžite vynulujeme neprenesené číselko
+      lastSeenGiftsCount = filtered.length;
+      document.getElementById('bell-count').classList.add('hidden');
+
+      listDiv.innerHTML = '';
+      if (filtered.length === 0) {
+        listDiv.innerHTML = '<p style="text-align:center; color:#94a3b8; padding:10px;">Žiadne nové aktivity.</p>';
+      } else {
+        const recent = filtered.slice(-8).reverse();
+        recent.forEach(g => {
+          const item = document.createElement('div');
+          item.className = 'bell-item';
+          if (g.reserved_by) {
+            item.innerHTML = `🎁 <strong>${g.reserved_by}</strong> si rezervoval/a darček od <strong>${g.owner}</strong>: <em>${g.title}</em>`;
+          } else {
+            item.innerHTML = `➕ <strong>${g.owner}</strong> pridal/a nové prianie: <em>${g.title}</em>`;
+          }
+          listDiv.appendChild(item);
+        });
+      }
+    } catch (e) {
+      listDiv.innerHTML = '<p style="text-align:center; color:#ef4444; padding:10px;">Chyba pri načítavaní noviniek.</p>';
+    }
+  }
+
+  function closeBellModal() {
+    document.getElementById('bell-modal').classList.add('hidden');
+  }
+
   function renderMembersGrid() {
     const grid = document.getElementById('members-grid');
     grid.innerHTML = '';
@@ -691,19 +945,36 @@
     }
   }
 
-  async function reserveGift(giftId, currentReservedBy) {
-    let newReservedBy = "";
-
-    if (!currentReservedBy) {
-      newReservedBy = currentUser.name;
-    } else if (currentReservedBy === currentUser.name) {
-      newReservedBy = "";
-    } else {
-      alert("Tento darček už rezervoval niekto iný!");
-      return;
-    }
-
+  /* KONTROLA REZERVOVANIA V REÁLNOM ČASE (Ochrana pred konfliktom dvoch ľudí naraz) */
+  async function reserveGift(giftId) {
     try {
+      // 1. Zistíme najprv live stav priamo zo servera
+      const checkRes = await fetch(`${SUPABASE_URL}/rest/v1/gifts?id=eq.${giftId}&select=*`, {
+        method: 'GET',
+        headers: headers
+      });
+
+      const currentGifts = await checkRes.json();
+      if (!currentGifts || currentGifts.length === 0) return;
+
+      const latestGiftState = currentGifts[0];
+
+      let newReservedBy = "";
+
+      if (!latestGiftState.reserved_by) {
+        // Darček je stále voľný -> rezervujeme
+        newReservedBy = currentUser.name;
+      } else if (latestGiftState.reserved_by === currentUser.name) {
+        // Chceme zrušiť svoju vlastnú rezerváciu
+        newReservedBy = "";
+      } else {
+        // Niektorý člen rodiny si ho rezervoval sekundu pred nami!
+        alert(`Uups! Tento darček práve rezervoval/a ${latestGiftState.reserved_by}.`);
+        fetchGiftsCounts();
+        return;
+      }
+
+      // 2. Odošleme uloženie
       const res = await fetch(`${SUPABASE_URL}/rest/v1/gifts?id=eq.${giftId}`, {
         method: 'PATCH',
         headers: headers,
@@ -711,7 +982,7 @@
       });
 
       if (!res.ok) alert("Chyba pri rezervácii!");
-      renderGifts();
+      fetchGiftsCounts();
     } catch (e) {
       alert("Chyba pripojenia.");
     }
@@ -759,12 +1030,11 @@
           `;
         } else {
           if (gift.reserved_by === currentUser.name) {
-            rightContent = `<button class="btn-cancel" onclick="reserveGift('${gift.id}', '${gift.reserved_by}')">Zrušiť rezerváciu</button>`;
+            rightContent = `<button class="btn-cancel" onclick="reserveGift('${gift.id}')">Zrušiť rezerváciu</button>`;
           } else if (gift.reserved_by) {
-            // Ostatní uvidia, KTO darček rezervoval, aby mohli spolupracovať
             rightContent = `<span class="status-badge-reserved">🔒 Rezervoval/a: ${gift.reserved_by}</span>`;
           } else {
-            rightContent = `<button class="btn-reserve" onclick="reserveGift('${gift.id}', '${gift.reserved_by}')">🎁 Rezervovať</button>`;
+            rightContent = `<button class="btn-reserve" onclick="reserveGift('${gift.id}')">🎁 Rezervovať</button>`;
           }
         }
 
