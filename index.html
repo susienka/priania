@@ -375,6 +375,17 @@
       white-space: nowrap; 
     }
 
+    .status-badge-reserved {
+      font-size: 13px;
+      font-weight: 700;
+      color: #047857;
+      background: #ecfdf5;
+      border: 1px solid #d1fae5;
+      padding: 10px 14px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+
     /* FORM CONTAINER */
     .add-box { 
       margin-top: 36px; 
@@ -475,6 +486,7 @@
 </div>
 
 <script>
+  // Zachované pôvodne zadané IDčka a mená
   const users = [
     { id: "L01O", name: "Leo" },
     { id: "E02A", name: "Eva" },
@@ -749,7 +761,8 @@
           if (gift.reserved_by === currentUser.name) {
             rightContent = `<button class="btn-cancel" onclick="reserveGift('${gift.id}', '${gift.reserved_by}')">Zrušiť rezerváciu</button>`;
           } else if (gift.reserved_by) {
-            rightContent = `<span class="status-badge">❌ Už rezervované</span>`;
+            // Ostatní uvidia, KTO darček rezervoval, aby mohli spolupracovať
+            rightContent = `<span class="status-badge-reserved">🔒 Rezervoval/a: ${gift.reserved_by}</span>`;
           } else {
             rightContent = `<button class="btn-reserve" onclick="reserveGift('${gift.id}', '${gift.reserved_by}')">🎁 Rezervovať</button>`;
           }
