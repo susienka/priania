@@ -187,7 +187,7 @@
 
     .header-actions {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       align-items: center;
       flex-wrap: wrap;
     }
@@ -249,7 +249,7 @@
     .logout-btn { 
       width: auto; 
       background: #64748b; 
-      padding: 10px 20px; 
+      padding: 10px 18px; 
       font-size: 14px; 
       border-radius: 12px; 
       color: white; 
@@ -262,7 +262,7 @@
 
     .logout-btn:hover { background: #475569; }
 
-    /* MODÁLNE OKNO */
+    /* MODÁLNE OKNÁ */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -279,11 +279,13 @@
       background: #ffffff;
       border-radius: 24px;
       padding: 28px 24px;
-      max-width: 400px;
+      max-width: 440px;
       width: 100%;
       text-align: center;
       box-shadow: 0 20px 40px rgba(0,0,0,0.3);
       border-top: 6px solid #e11d48;
+      max-height: 90vh;
+      overflow-y: auto;
     }
 
     .modal-card h3 {
@@ -296,7 +298,7 @@
     .modal-card p {
       font-size: 14px;
       color: #64748b;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       line-height: 1.5;
     }
 
@@ -304,6 +306,7 @@
       display: flex;
       gap: 10px;
       justify-content: center;
+      flex-wrap: wrap;
     }
 
     .btn-secondary {
@@ -321,19 +324,136 @@
 
     .bell-list {
       text-align: left;
-      max-height: 260px;
+      max-height: 300px;
       overflow-y: auto;
       margin-bottom: 16px;
     }
 
     .bell-item {
-      padding: 10px 12px;
+      padding: 12px;
       border-bottom: 1px solid #f1f5f9;
       font-size: 13px;
       color: #334155;
+      line-height: 1.4;
     }
     .bell-item:last-child { border-bottom: none; }
     .bell-item strong { color: #e11d48; }
+
+    .invite-box {
+      background: #fff1f2;
+      border: 1px solid #fecdd3;
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .invite-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .btn-accept {
+      background: #10b981;
+      color: white;
+      padding: 6px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      flex: 1;
+    }
+    .btn-accept:hover { background: #059669; }
+
+    .btn-decline {
+      background: #ef4444;
+      color: white;
+      padding: 6px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      flex: 1;
+    }
+    .btn-decline:hover { background: #dc2626; }
+
+    /* SPOLUPRÁCA CHECKBOXY */
+    .collab-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .collab-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      transition: 0.15s;
+    }
+    .collab-option:hover {
+      border-color: #fda4af;
+      background: #fff1f2;
+    }
+    .collab-option input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #e11d48;
+      cursor: pointer;
+    }
+
+    /* NÁKUPNÝ LIST MODAL */
+    .shopping-item {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      text-align: left;
+    }
+    .shopping-owner {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #e11d48;
+      margin-bottom: 2px;
+    }
+    .shopping-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .shopping-collab {
+      font-size: 12px;
+      color: #059669;
+      font-weight: 600;
+      margin-top: 3px;
+    }
+
+    /* WHAT'S NEW LIST */
+    .whats-new-list {
+      text-align: left;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+    .whats-new-list li {
+      background: #f8fafc;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      color: #334155;
+      line-height: 1.4;
+      border-left: 3px solid #e11d48;
+    }
 
     /* MEMBERS GRID */
     .section-title { 
@@ -452,12 +572,22 @@
     }
 
     .btn-reserve:hover { transform: translateY(-1px); background: #059669; }
+
+    .btn-collab {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: white;
+      font-size: 14px;
+      padding: 12px 16px;
+      white-space: nowrap;
+      box-shadow: 0 6px 16px -4px rgba(37, 99, 235, 0.4);
+    }
+    .btn-collab:hover { transform: translateY(-1px); background: #2563eb; }
     
     .btn-cancel { 
       background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); 
       color: white; 
       font-size: 14px; 
-      padding: 12px 18px; 
+      padding: 12px 16px; 
       white-space: nowrap; 
       box-shadow: 0 6px 16px -4px rgba(245, 158, 11, 0.4); 
     }
@@ -495,6 +625,14 @@
       white-space: nowrap;
     }
 
+    .pending-note {
+      font-size: 11px;
+      color: #64748b;
+      font-weight: 600;
+      width: 100%;
+      text-align: right;
+    }
+
     /* FORM CONTAINER */
     .add-box { 
       margin-top: 36px; 
@@ -517,10 +655,11 @@
       .countdown-box { flex-direction: column; gap: 4px; padding: 12px; }
       .header { flex-direction: column; align-items: stretch; gap: 14px; padding: 14px 16px; }
       .header-actions { display: flex; flex-wrap: wrap; gap: 8px; width: 100%; }
-      .santa-link-btn, .logout-btn, .icon-btn { flex: 1; text-align: center; padding: 12px; justify-content: center; }
+      .santa-link-btn, .logout-btn, .icon-btn { flex: 1; text-align: center; padding: 12px 10px; justify-content: center; }
       .gift-item { flex-direction: column; align-items: stretch; gap: 14px; padding: 16px; }
       .gift-actions { justify-content: flex-end; }
-      .btn-reserve, .btn-cancel, .btn-delete, .status-badge { width: 100%; text-align: center; padding: 12px; }
+      .btn-reserve, .btn-collab, .btn-cancel, .btn-delete, .status-badge { width: 100%; text-align: center; padding: 12px; }
+      .pending-note { text-align: center; }
     }
   </style>
 </head>
@@ -569,6 +708,8 @@
       <div class="header-actions">
         <button class="icon-btn" id="music-btn" onclick="toggleMusic()">🎵 Prehrať</button>
 
+        <button class="icon-btn" id="list-btn" onclick="openShoppingListModal()">📋 List</button>
+
         <button class="icon-btn" id="bell-btn" onclick="openBellModal()">
           🔔 <span id="bell-count" class="bell-badge hidden">0</span>
         </button>
@@ -595,6 +736,22 @@
   </div>
 </div>
 
+<!-- MODAL: ČO JE NOVÉ (ZOBRAZÍ SA LEN RAZ) -->
+<div id="whats-new-modal" class="modal-overlay hidden">
+  <div class="modal-card">
+    <h3>✨ Aktualizácia vianočného portálu!</h3>
+    <p>Pridali sme nové vylepšenia, aby bolo vyberanie a nakupovanie darčekov ešte jednoduchšie:</p>
+    <ul class="whats-new-list">
+      <li>🤝 <strong>Spolupráca na darčeku:</strong> Po rezervácii darčeka môžeš kliknúť na <em>Spolupracovať</em> a pozvať ostatných (okrem obdarovaného), aby ste sa na darček zložili spolu.</li>
+      <li>📋 <strong>Nákupný List:</strong> Hore v menu nájdeš tlačidlo <em>List</em> so všetkými darčekmi, ktoré máš rezervované. Dá sa jedným klikom stiahnuť do mobilu/poznámok!</li>
+      <li>🔔 <strong>Vianočný zvonček:</strong> Upozorní ťa na nové priania, rezervácie aj pozvánky na spoluprácu (tvoje vlastné darčeky sú pred tebou stále tajné).</li>
+      <li>🎵 <strong>Vianočná hudba:</strong> Príjemný hudobný podmaz s jednoduchým ovládaním hore v lište.</li>
+    </ul>
+    <button class="btn-primary" onclick="closeWhatsNewModal()">Super, rozumiem! 🎄</button>
+  </div>
+</div>
+
+<!-- MODAL: PÝTANIE SA NA HUDBU -->
 <div id="music-modal" class="modal-overlay hidden">
   <div class="modal-card">
     <h3>🎄 Vianočná nálada</h3>
@@ -606,11 +763,38 @@
   </div>
 </div>
 
+<!-- MODAL: VIANOČNÝ ZVONČEK -->
 <div id="bell-modal" class="modal-overlay hidden">
   <div class="modal-card">
-    <h3>🔔 Vianočné novinky v rodine</h3>
+    <h3>🔔 Vianočné novinky a pozvánky</h3>
     <div class="bell-list" id="bell-list-content">Načítavam živé novinky...</div>
     <button class="btn-secondary" onclick="closeBellModal()">Zavrieť</button>
+  </div>
+</div>
+
+<!-- MODAL: SPOLUPRÁCA NA DARČEKU -->
+<div id="collab-modal" class="modal-overlay hidden">
+  <div class="modal-card">
+    <h3>🤝 S kým chceš spolupracovať?</h3>
+    <p id="collab-gift-desc">Vyber členov rodiny, ktorým pošleš pozvánku na spoločný darček:</p>
+    <div class="collab-list" id="collab-users-list"></div>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="sendCollabInvites()">Poslať pozvánku 📨</button>
+      <button class="btn-secondary" onclick="closeCollabModal()">Zrušiť</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: NÁKUPNÝ LIST -->
+<div id="shopping-list-modal" class="modal-overlay hidden">
+  <div class="modal-card">
+    <h3>📋 Môj nákupný list</h3>
+    <p>Prehľad všetkých darčekov, ktoré máš rezervované:</p>
+    <div class="bell-list" id="shopping-list-content">Načítavam...</div>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="downloadShoppingList()">📥 Stiahnuť zoznam (.txt)</button>
+      <button class="btn-secondary" onclick="closeShoppingListModal()">Zavrieť</button>
+    </div>
   </div>
 </div>
 
@@ -640,7 +824,31 @@
   let currentUser = null;
   let activeTargetUser = null;
   let giftsCountsMap = {};
-  let lastSeenGiftsCount = 0; // Pre správne nulovanie neprečítaných noviniek
+  let lastSeenGiftsCount = 0;
+  let pendingMusicAskAfterUpdate = false;
+  let activeCollabGift = null;
+  let myReservedGiftsCache = [];
+
+  /* PARSER PRE REZERVÁCIE A SPOLUPRÁCU (uložené v stĺpci reserved_by) */
+  // Formát v DB: "Erik / Leo|PENDING:Alex,Sofia"
+  function parseReservation(str) {
+    if (!str) return { confirmed: [], pending: [] };
+    const parts = str.split('|PENDING:');
+    const confirmed = parts[0] ? parts[0].split(' / ').map(s => s.trim()).filter(Boolean) : [];
+    const pending = parts[1] ? parts[1].split(',').map(s => s.trim()).filter(Boolean) : [];
+    return { confirmed, pending };
+  }
+
+  function serializeReservation(confirmed, pending) {
+    const cleanConf = [...new Set(confirmed)].filter(Boolean);
+    const cleanPend = [...new Set(pending)].filter(u => u && !cleanConf.includes(u));
+    if (cleanConf.length === 0) return "";
+    let res = cleanConf.join(' / ');
+    if (cleanPend.length > 0) {
+      res += '|PENDING:' + cleanPend.join(',');
+    }
+    return res;
+  }
 
   /* LOGIKA PRE HUDBU */
   let currentSongIndex = 1;
@@ -699,6 +907,26 @@
     toggleMusic();
   }
 
+  /* AKTUALIZÁCIA STRÁNKY (WHAT'S NEW - LEN RAZ) */
+  function checkAndShowWhatsNew(askMusicAfter) {
+    const seen = localStorage.getItem('vianoce_update_v2_seen');
+    if (!seen) {
+      pendingMusicAskAfterUpdate = askMusicAfter;
+      document.getElementById('whats-new-modal').classList.remove('hidden');
+    } else if (askMusicAfter) {
+      askMusicModal();
+    }
+  }
+
+  function closeWhatsNewModal() {
+    localStorage.setItem('vianoce_update_v2_seen', 'true');
+    document.getElementById('whats-new-modal').classList.add('hidden');
+    if (pendingMusicAskAfterUpdate) {
+      pendingMusicAskAfterUpdate = false;
+      askMusicModal();
+    }
+  }
+
   /* COUNTDOWN */
   function updateCountdown() {
     const now = new Date();
@@ -741,10 +969,7 @@
     document.getElementById('current-user-name').innerText = `${currentUser.name}`;
     document.getElementById('user-avatar').innerText = currentUser.name.charAt(0);
 
-    if (isFreshLogin) {
-      askMusicModal();
-    }
-
+    checkAndShowWhatsNew(isFreshLogin);
     fetchGiftsCounts();
   }
 
@@ -780,23 +1005,32 @@
       if (res.ok) {
         const allGifts = await res.json();
         giftsCountsMap = {};
+        let pendingInvitesForMe = 0;
+
         allGifts.forEach(g => {
           giftsCountsMap[g.owner] = (giftsCountsMap[g.owner] || 0) + 1;
+          const parsed = parseReservation(g.reserved_by);
+          if (parsed.pending.includes(currentUser.name) && g.owner !== currentUser.name) {
+            pendingInvitesForMe++;
+          }
         });
 
-        // Vypočítame novinky (s ochranou vlastného prekvapenia)
-        const visibleGifts = allGifts.filter(g => !(g.reserved_by && g.owner === currentUser.name));
+        // Ochrana vlastného prekvapenia
+        const visibleGifts = allGifts.filter(g => {
+          const parsed = parseReservation(g.reserved_by);
+          return !(parsed.confirmed.length > 0 && g.owner === currentUser.name);
+        });
         
-        // Ak sa objavili nové darčeky/rezervácie odvtedy, čo človek otvoril zvonček, ukážeme odznak
         if (lastSeenGiftsCount === 0) {
           lastSeenGiftsCount = visibleGifts.length;
         }
 
-        const unreadCount = visibleGifts.length - lastSeenGiftsCount;
+        const unreadUpdates = Math.max(0, visibleGifts.length - lastSeenGiftsCount);
+        const totalBadge = pendingInvitesForMe + unreadUpdates;
         const badge = document.getElementById('bell-count');
         
-        if (unreadCount > 0) {
-          badge.innerText = unreadCount > 9 ? '9+' : unreadCount;
+        if (totalBadge > 0) {
+          badge.innerText = totalBadge > 9 ? '9+' : totalBadge;
           badge.classList.remove('hidden');
         } else {
           badge.classList.add('hidden');
@@ -808,14 +1042,13 @@
     renderGifts();
   }
 
-  /* ZVONČEK: ŽIVÉ NAČÍTANIE PRI OTVORENÍ & NULOVANIE PO PREČÍTANÍ */
+  /* ZVONČEK: ŽIVÉ NAČÍTANIE + POZVÁNKY NA SPOLUPRÁCU */
   async function openBellModal() {
     const listDiv = document.getElementById('bell-list-content');
     listDiv.innerHTML = 'Načítavam najnovšie správy...';
     document.getElementById('bell-modal').classList.remove('hidden');
 
     try {
-      // Vždy 100% živé dáta priamo z databázy
       const res = await fetch(`${SUPABASE_URL}/rest/v1/gifts?select=*`, {
         method: 'GET',
         headers: headers
@@ -823,23 +1056,50 @@
       
       const allGifts = await res.json();
       
-      // Ochrana prekvapenia: skryjeme rezervácie používateľovho vlastného zoznamu
-      const filtered = allGifts.filter(g => !(g.reserved_by && g.owner === currentUser.name));
+      const filtered = allGifts.filter(g => {
+        const parsed = parseReservation(g.reserved_by);
+        return !(parsed.confirmed.length > 0 && g.owner === currentUser.name);
+      });
       
-      // Po prečítaní okamžite vynulujeme neprenesené číselko
       lastSeenGiftsCount = filtered.length;
       document.getElementById('bell-count').classList.add('hidden');
 
       listDiv.innerHTML = '';
-      if (filtered.length === 0) {
+
+      // 1. Najprv zobrazíme čakajúce pozvánky na spoluprácu pre prihláseného používateľa
+      const invites = allGifts.filter(g => {
+        const parsed = parseReservation(g.reserved_by);
+        return parsed.pending.includes(currentUser.name) && g.owner !== currentUser.name;
+      });
+
+      invites.forEach(g => {
+        const parsed = parseReservation(g.reserved_by);
+        const inviter = parsed.confirmed.join(' / ');
+        const box = document.createElement('div');
+        box.className = 'invite-box';
+        box.innerHTML = `
+          <div>🤝 <strong>${inviter}</strong> ťa pozýva spolupracovať na darčeku <em>"${g.title}"</em> pre <strong>${g.owner}</strong>. Chceš sa pridať?</div>
+          <div class="invite-actions">
+            <button class="btn-accept" onclick="respondToCollab('${g.id}', true)">✅ Áno, pridať sa</button>
+            <button class="btn-decline" onclick="respondToCollab('${g.id}', false)">❌ Nie</button>
+          </div>
+        `;
+        listDiv.appendChild(box);
+      });
+
+      // 2. Ostatné aktivity
+      if (filtered.length === 0 && invites.length === 0) {
         listDiv.innerHTML = '<p style="text-align:center; color:#94a3b8; padding:10px;">Žiadne nové aktivity.</p>';
       } else {
         const recent = filtered.slice(-8).reverse();
         recent.forEach(g => {
+          const parsed = parseReservation(g.reserved_by);
           const item = document.createElement('div');
           item.className = 'bell-item';
-          if (g.reserved_by) {
-            item.innerHTML = `🎁 <strong>${g.reserved_by}</strong> si rezervoval/a darček od <strong>${g.owner}</strong>: <em>${g.title}</em>`;
+          if (parsed.confirmed.length > 0) {
+            const whoText = parsed.confirmed.join(' / ');
+            const verb = parsed.confirmed.length > 1 ? 'si rezervovali' : 'si rezervoval/a';
+            item.innerHTML = `🎁 <strong>${whoText}</strong> ${verb} darček od <strong>${g.owner}</strong>: <em>${g.title}</em>`;
           } else {
             item.innerHTML = `➕ <strong>${g.owner}</strong> pridal/a nové prianie: <em>${g.title}</em>`;
           }
@@ -853,6 +1113,218 @@
 
   function closeBellModal() {
     document.getElementById('bell-modal').classList.add('hidden');
+  }
+
+  /* ODPOVEĎ NA POZVÁNKU NA SPOLUPRÁCU (ÁNO / NIE) */
+  async function respondToCollab(giftId, accept) {
+    try {
+      const checkRes = await fetch(`${SUPABASE_URL}/rest/v1/gifts?id=eq.${giftId}&select=*`, {
+        method: 'GET',
+        headers: headers
+      });
+      const currentGifts = await checkRes.json();
+      if (!currentGifts || currentGifts.length === 0) return;
+
+      const latest = currentGifts[0];
+      const parsed = parseReservation(latest.reserved_by);
+
+      // Odstránime používateľa zo zoznamu čakajúcich
+      parsed.pending = parsed.pending.filter(u => u !== currentUser.name);
+
+      if (accept && parsed.confirmed.length > 0) {
+        if (!parsed.confirmed.includes(currentUser.name)) {
+          parsed.confirmed.push(currentUser.name);
+        }
+      }
+
+      const updatedStr = serializeReservation(parsed.confirmed, parsed.pending);
+
+      await fetch(`${SUPABASE_URL}/rest/v1/gifts?id=eq.${giftId}`, {
+        method: 'PATCH',
+        headers: headers,
+        body: JSON.stringify({ reserved_by: updatedStr })
+      });
+
+      openBellModal();
+      fetchGiftsCounts();
+    } catch (e) {
+      alert("Chyba pri spracovaní odpovede.");
+    }
+  }
+
+  /* OTVORENIE MENU SPOLUPRÁCE */
+  function openCollabModal(giftId, giftTitle, giftOwner, currentReservedStr) {
+    activeCollabGift = { id: giftId, title: giftTitle, owner: giftOwner };
+    const parsed = parseReservation(currentReservedStr);
+
+    document.getElementById('collab-gift-desc').innerHTML = 
+      `Darček: <strong>${giftTitle}</strong> (pre ${giftOwner})<br>Vyber, koho chceš prizvať do spolupráce:`;
+
+    const listDiv = document.getElementById('collab-users-list');
+    listDiv.innerHTML = '';
+
+    // Vyfiltrujeme všetkých okrem prihláseného a majiteľa darčeka
+    const eligibleUsers = users.filter(u => u.name !== currentUser.name && u.name !== giftOwner);
+
+    eligibleUsers.forEach(u => {
+      const isAlreadyConfirmed = parsed.confirmed.includes(u.name);
+      const isAlreadyPending = parsed.pending.includes(u.name);
+
+      const label = document.createElement('label');
+      label.className = 'collab-option';
+      
+      if (isAlreadyConfirmed) {
+        label.innerHTML = `<input type="checkbox" checked disabled> <span>${u.name} <small style="color:#059669;">(už spolupracuje)</small></span>`;
+      } else if (isAlreadyPending) {
+        label.innerHTML = `<input type="checkbox" checked disabled> <span>${u.name} <small style="color:#d97706;">(pozvánka odoslaná)</small></span>`;
+      } else {
+        label.innerHTML = `<input type="checkbox" value="${u.name}"> <span>${u.name}</span>`;
+      }
+      listDiv.appendChild(label);
+    });
+
+    document.getElementById('collab-modal').classList.remove('hidden');
+  }
+
+  function closeCollabModal() {
+    document.getElementById('collab-modal').classList.add('hidden');
+    activeCollabGift = null;
+  }
+
+  async function sendCollabInvites() {
+    if (!activeCollabGift) return;
+    const checkboxes = document.querySelectorAll('#collab-users-list input[type="checkbox"]:not(:disabled):checked');
+    const selectedNames = Array.from(checkboxes).map(cb => cb.value);
+
+    if (selectedNames.length === 0) {
+      alert("Vyber aspoň jedného člena rodiny na spoluprácu.");
+      return;
+    }
+
+    try {
+      const checkRes = await fetch(`${SUPABASE_URL}/rest/v1/gifts?id=eq.${activeCollabGift.id}&select=*`, {
+        method: 'GET',
+        headers: headers
+      });
+      const currentGifts = await checkRes.json();
+      if (!currentGifts || currentGifts.length === 0) return;
+
+      const latest = currentGifts[0];
+      const parsed = parseReservation(latest.reserved_by);
+
+      if (!parsed.confirmed.includes(currentUser.name)) {
+        alert("Tento darček už nemáš rezervovaný.");
+        closeCollabModal();
+        fetchGiftsCounts();
+        return;
+      }
+
+      selectedNames.forEach(name => {
+        if (!parsed.confirmed.includes(name) && !parsed.pending.includes(name)) {
+          parsed.pending.push(name);
+        }
+      });
+
+      const updatedStr = serializeReservation(parsed.confirmed, parsed.pending);
+
+      await fetch(`${SUPABASE_URL}/rest/v1/gifts?id=eq.${activeCollabGift.id}`, {
+        method: 'PATCH',
+        headers: headers,
+        body: JSON.stringify({ reserved_by: updatedStr })
+      });
+
+      closeCollabModal();
+      alert(`Pozvánka na spoluprácu bola odoslaná (${selectedNames.join(', ')})! Objaví sa im vo zvončeku 🔔.`);
+      fetchGiftsCounts();
+    } catch (e) {
+      alert("Chyba pri odosielaní pozvánky.");
+    }
+  }
+
+  /* NÁKUPNÝ LIST (LIST V HLAVIČKE + STIAHNUTIE) */
+  async function openShoppingListModal() {
+    const contentDiv = document.getElementById('shopping-list-content');
+    contentDiv.innerHTML = 'Načítavam tvoj nákupný list...';
+    document.getElementById('shopping-list-modal').classList.remove('hidden');
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/gifts?select=*`, {
+        method: 'GET',
+        headers: headers
+      });
+      const allGifts = await res.json();
+
+      myReservedGiftsCache = allGifts.filter(g => {
+        const parsed = parseReservation(g.reserved_by);
+        return parsed.confirmed.includes(currentUser.name);
+      });
+
+      contentDiv.innerHTML = '';
+      if (myReservedGiftsCache.length === 0) {
+        contentDiv.innerHTML = '<p style="text-align:center; color:#94a3b8; padding:15px;">Zatiaľ nemáš rezervované žiadne darčeky.</p>';
+        return;
+      }
+
+      myReservedGiftsCache.forEach(g => {
+        const parsed = parseReservation(g.reserved_by);
+        const coBuyers = parsed.confirmed.filter(n => n !== currentUser.name);
+        const collabHtml = coBuyers.length > 0 
+          ? `<div class="shopping-collab">🤝 Spolu s: ${coBuyers.join(', ')}</div>` 
+          : '';
+        const linkHtml = g.link 
+          ? `<div style="margin-top:4px;"><a href="${g.link}" target="_blank" style="font-size:12px; color:#2563eb; text-decoration:none; font-weight:600;">🔗 Otvoriť odkaz</a></div>` 
+          : '';
+
+        const item = document.createElement('div');
+        item.className = 'shopping-item';
+        item.innerHTML = `
+          <div class="shopping-owner">Pre: ${g.owner}</div>
+          <div class="shopping-title">🎁 ${g.title}</div>
+          ${collabHtml}
+          ${linkHtml}
+        `;
+        contentDiv.appendChild(item);
+      });
+    } catch (e) {
+      contentDiv.innerHTML = '<p style="text-align:center; color:#ef4444;">Chyba pri načítaní listu.</p>';
+    }
+  }
+
+  function closeShoppingListModal() {
+    document.getElementById('shopping-list-modal').classList.add('hidden');
+  }
+
+  function downloadShoppingList() {
+    if (!myReservedGiftsCache || myReservedGiftsCache.length === 0) {
+      alert("Nemáš žiadne rezervované darčeky na stiahnutie.");
+      return;
+    }
+
+    let text = `🎄 VIANOČNÝ NÁKUPNÝ ZOZNAM (${currentUser.name}) 🎄\n`;
+    text += `==========================================\n\n`;
+
+    myReservedGiftsCache.forEach((g, idx) => {
+      const parsed = parseReservation(g.reserved_by);
+      const coBuyers = parsed.confirmed.filter(n => n !== currentUser.name);
+      text += `${idx + 1}. ${g.title} (Pre: ${g.owner})\n`;
+      if (coBuyers.length > 0) {
+        text += `   🤝 Spolupracuješ s: ${coBuyers.join(', ')}\n`;
+      }
+      if (g.link) {
+        text += `   🔗 Odkaz: ${g.link}\n`;
+      }
+      text += `\n`;
+    });
+
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Vianocny_List_${currentUser.name}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   }
 
   function renderMembersGrid() {
@@ -946,10 +1418,9 @@
     }
   }
 
-  /* KONTROLA REZERVOVANIA V REÁLNOM ČASE (Ochrana pred konfliktom dvoch ľudí naraz) */
+  /* REZERVOVANIE A RUŠENIE S PODPOROU SPOLUPRÁCE */
   async function reserveGift(giftId) {
     try {
-      // 1. Zistíme najprv live stav priamo zo servera
       const checkRes = await fetch(`${SUPABASE_URL}/rest/v1/gifts?id=eq.${giftId}&select=*`, {
         method: 'GET',
         headers: headers
@@ -959,27 +1430,29 @@
       if (!currentGifts || currentGifts.length === 0) return;
 
       const latestGiftState = currentGifts[0];
+      const parsed = parseReservation(latestGiftState.reserved_by);
 
-      let newReservedBy = "";
+      let updatedStr = "";
 
-      if (!latestGiftState.reserved_by) {
-        // Darček je stále voľný -> rezervujeme
-        newReservedBy = currentUser.name;
-      } else if (latestGiftState.reserved_by === currentUser.name) {
-        // Chceme zrušiť svoju vlastnú rezerváciu
-        newReservedBy = "";
+      if (parsed.confirmed.length === 0) {
+        // Voľný darček -> rezervujem
+        updatedStr = serializeReservation([currentUser.name], []);
+      } else if (parsed.confirmed.includes(currentUser.name)) {
+        // Ruším svoju časť rezervácie (ak bol niekto v spolupráci, ostáva mu)
+        const remainingConfirmed = parsed.confirmed.filter(n => n !== currentUser.name);
+        updatedStr = remainingConfirmed.length > 0 
+          ? serializeReservation(remainingConfirmed, parsed.pending) 
+          : "";
       } else {
-        // Niektorý člen rodiny si ho rezervoval sekundu pred nami!
-        alert(`Uups! Tento darček práve rezervoval/a ${latestGiftState.reserved_by}.`);
+        alert(`Uups! Tento darček práve rezervoval/a ${parsed.confirmed.join(' / ')}.`);
         fetchGiftsCounts();
         return;
       }
 
-      // 2. Odošleme uloženie
       const res = await fetch(`${SUPABASE_URL}/rest/v1/gifts?id=eq.${giftId}`, {
         method: 'PATCH',
         headers: headers,
-        body: JSON.stringify({ reserved_by: newReservedBy })
+        body: JSON.stringify({ reserved_by: updatedStr })
       });
 
       if (!res.ok) alert("Chyba pri rezervácii!");
@@ -1022,6 +1495,8 @@
         let linkHtml = gift.link ? `<a href="${gift.link}" target="_blank" class="gift-link">🔗 Kde kúpiť darček</a>` : '';
         let rightContent = '';
 
+        const parsed = parseReservation(gift.reserved_by);
+
         if (isMyOwnList) {
           rightContent = `
             <div class="gift-actions">
@@ -1030,10 +1505,27 @@
             </div>
           `;
         } else {
-          if (gift.reserved_by === currentUser.name) {
-            rightContent = `<button class="btn-cancel" onclick="reserveGift('${gift.id}')">Zrušiť rezerváciu</button>`;
-          } else if (gift.reserved_by) {
-            rightContent = `<span class="status-badge-reserved">🔒 Rezervoval/a: ${gift.reserved_by}</span>`;
+          if (parsed.confirmed.includes(currentUser.name)) {
+            const safeTitle = gift.title.replace(/'/g, "\\'");
+            const safeReserved = (gift.reserved_by || '').replace(/'/g, "\\'");
+            const collabBadge = parsed.confirmed.length > 1 
+              ? `<span class="status-badge-reserved">🔒 ${parsed.confirmed.join(' / ')}</span>` 
+              : '';
+            const pendingNote = parsed.pending.length > 0 
+              ? `<div class="pending-note">⏳ Čaká na potvrdenie: ${parsed.pending.join(', ')}</div>` 
+              : '';
+
+            rightContent = `
+              <div class="gift-actions" style="justify-content: flex-end;">
+                ${collabBadge}
+                <button class="btn-collab" onclick="openCollabModal('${gift.id}', '${safeTitle}', '${gift.owner}', '${safeReserved}')">🤝 Spolupracovať</button>
+                <button class="btn-cancel" onclick="reserveGift('${gift.id}')">Zrušiť rezerváciu</button>
+                ${pendingNote}
+              </div>
+            `;
+          } else if (parsed.confirmed.length > 0) {
+            const label = parsed.confirmed.length > 1 ? 'Rezervovali' : 'Rezervoval/a';
+            rightContent = `<span class="status-badge-reserved">🔒 ${label}: ${parsed.confirmed.join(' / ')}</span>`;
           } else {
             rightContent = `<button class="btn-reserve" onclick="reserveGift('${gift.id}')">🎁 Rezervovať</button>`;
           }
